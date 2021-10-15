@@ -1,14 +1,11 @@
 import React from 'react';
 import { View, Text } from 'react-native';
+import { Container } from './styles';
 
-interface HomeProps {
-	title: string;
-}
-
-export function Dashboard({ title }: HomeProps) {
+export function Dashboard() {
 	return (
-		<View>
-			<Text>{title}</Text>
-		</View>
+		<Container>
+      <Text>Dashboard</Text>
+    </Container>
 	);
 }
