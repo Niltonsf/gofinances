@@ -8,5 +8,11 @@ export default {
 		titles: '#363F5F',
 		texts: '#969CB3',
 		background: '#F0F2F5'
+	},
+
+	fonts: {
+		regular: 'Poppins_400Regular',
+		medium: 'Poppins_500Medium',
+		bold: 'Poppins_700Bold'
 	}
 }
