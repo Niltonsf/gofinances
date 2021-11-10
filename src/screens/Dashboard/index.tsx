@@ -1,5 +1,4 @@
 import React from 'react';
-import { View, Text } from 'react-native';
 import { 
 	Container,
 	Header,
@@ -8,7 +7,8 @@ import {
 	User,
 	UserGreeting,
 	UserName,
-	UserWrapper
+	UserWrapper,
+	Icon
 } from './styles';
 
 export function Dashboard() {
@@ -20,9 +20,11 @@ export function Dashboard() {
 						<Photo source={{ uri: 'http://github.com/niltonsf.png'}}/>
 						<User>
 							<UserGreeting>Ola,</UserGreeting>
-							<UserName>NIlton</UserName>
+							<UserName>Nilton</UserName>
 						</User>
 					</UserInfo>
+
+					<Icon name="power"/>
 				</UserWrapper>
 			</Header>
     </Container>
