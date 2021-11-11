@@ -7,7 +7,8 @@ export default {
 		shapeColor: '#FFFFFF',
 		titles: '#363F5F',
 		texts: '#969CB3',
-		background: '#F0F2F5'
+		background: '#F0F2F5',
+		text_dark: '#000000'
 	},
 
 	fonts: {

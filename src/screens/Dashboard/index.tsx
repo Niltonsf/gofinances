@@ -8,8 +8,10 @@ import {
 	UserGreeting,
 	UserName,
 	UserWrapper,
-	Icon
+	Icon,
+	HighLightCards
 } from './styles';
+import { HighLightCard } from '../../components/HighLightCard';
 
 export function Dashboard() {
 	return (
@@ -27,6 +29,11 @@ export function Dashboard() {
 					<Icon name="power"/>
 				</UserWrapper>
 			</Header>
+
+			<HighLightCards>
+				<HighLightCard />
+				<HighLightCard />
+			</HighLightCards>
     </Container>
 	);
 }
