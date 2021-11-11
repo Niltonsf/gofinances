@@ -31,8 +31,9 @@ export function Dashboard() {
 			</Header>
 
 			<HighLightCards>
-				<HighLightCard />
-				<HighLightCard />
+				<HighLightCard type="up" title="Entrada" amount="R$ 14.000,00" lastTransaction="Ultima entrada em 14 de abril"/>
+				<HighLightCard type="down"title="Saidas" amount="R$ 1.253,50" lastTransaction="Ultima saida em 2 de abril"/>
+				<HighLightCard type="total" title="Total" amount="R$ 12.647,50" lastTransaction="01 a 30 de abril"/>
 			</HighLightCards>
     </Container>
 	);
