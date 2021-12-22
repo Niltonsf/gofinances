@@ -9,9 +9,15 @@ import {
 	UserName,
 	UserWrapper,
 	Icon,
-	HighLightCards
+	HighLightCards,
+	Transactions,
+	Title,
+	TransactionsList
 } from './styles';
 import { HighLightCard } from '../../components/HighLightCard';
+import { TransactionCard } from '../../components/TransactionCard';
+import { getBottomSpace } from 'react-native-iphone-x-helper';
+import { CardsData } from '../CardData';
 
 export function Dashboard() {
 	return (
@@ -35,6 +41,18 @@ export function Dashboard() {
 				<HighLightCard type="down"title="Saidas" amount="R$ 1.253,50" lastTransaction="Ultima saida em 2 de abril"/>
 				<HighLightCard type="total" title="Total" amount="R$ 12.647,50" lastTransaction="01 a 30 de abril"/>
 			</HighLightCards>
+
+			<Transactions>
+				<Title>Listagem</Title>
+				<TransactionsList 
+					data={CardsData}
+					renderItem={({ item }) => <TransactionCard  data={item}/>}
+					showsVerticalScrollIndicator={false}
+					contentContainerStyle={{
+						paddingBottom: getBottomSpace()
+					}}
+				/>
+			</Transactions>
     </Container>
 	);
 }
