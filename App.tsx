@@ -10,7 +10,7 @@ import {
 } from '@expo-google-fonts/poppins';
 import AppLoading from 'expo-app-loading';
 import theme from './src/global/styles/theme';
-import {Register} from './src/screens/Register';
+import { Register } from './src/screens/Register';
 import { CategorySelect } from './src/screens/CategorySelect';
 
 export default function App() {
@@ -27,7 +27,7 @@ export default function App() {
 
   return (
 		<ThemeProvider theme={theme}>
-			<CategorySelect />
+			<Register />
 			<StatusBar style="light"/>
 		</ThemeProvider>
   );
