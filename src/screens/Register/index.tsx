@@ -42,8 +42,8 @@ export function Register() {
 			</Header>
 			<Form>
 				<Fields>
-					<Input placeholder="Nome"/>
-					<Input placeholder="Preço"/>
+					<Input placeholder="Name"/>
+					<Input placeholder="Price"/>
 					<TransactionTypes>
 						<TransactionTypeButton type="up" title="Income" onPress={() => handleTransactionType('up')}
 							isActive={transactionType === 'up'}
@@ -54,7 +54,7 @@ export function Register() {
 					</TransactionTypes>
 					<CategorySelectButton title={category.name} onPress={handleOpenSelectCategory}/>
 				</Fields>
-				<Button title="Enviar"/>
+				<Button title="Send"/>
 			</Form>
 
 			<Modal visible={categoryModalOpen}>

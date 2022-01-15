@@ -57,7 +57,7 @@ export function CategorySelect({
 			/>
 
 			<Footer>
-				<Button title="Selecionar" onPress={closeSelectCategory}/>
+				<Button title="Select" onPress={closeSelectCategory}/>
 			</Footer>
 		</Container>
 	);
