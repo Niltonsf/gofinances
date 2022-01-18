@@ -12,7 +12,8 @@ import {
 	HighLightCards,
 	Transactions,
 	Title,
-	TransactionsList
+	TransactionsList,
+	LogoutButton
 } from './styles';
 import { HighLightCard } from '../../components/HighLightCard';
 import { TransactionCard } from '../../components/TransactionCard';
@@ -32,7 +33,9 @@ export function Dashboard() {
 						</User>
 					</UserInfo>
 
-					<Icon name="power"/>
+					<LogoutButton onPress={() => {}}>
+						<Icon name="power"/>
+					</LogoutButton>
 				</UserWrapper>
 			</Header>
 

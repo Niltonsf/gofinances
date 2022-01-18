@@ -37,7 +37,7 @@ export function AppRoutes() {
 					)
 				}}
 			/>
-			<Screen 
+			<Screen
 				name="Register"
 				component={Register}
 				options={{
@@ -51,6 +51,7 @@ export function AppRoutes() {
 				}}
 			/>
 			<Screen 
+
 				name="Summary"
 				component={Register}
 				options={{
