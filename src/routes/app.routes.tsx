@@ -25,6 +25,7 @@ export function AppRoutes() {
 			}}
 		>
 			<Screen 
+				key="Listing"
 				name="Listing"
 				component={Dashboard}
 				options={{
@@ -38,6 +39,7 @@ export function AppRoutes() {
 				}}
 			/>
 			<Screen
+				key="Register"
 				name="Register"
 				component={Register}
 				options={{
@@ -51,7 +53,7 @@ export function AppRoutes() {
 				}}
 			/>
 			<Screen 
-
+				key="Summary"
 				name="Summary"
 				component={Register}
 				options={{
