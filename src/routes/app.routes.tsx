@@ -5,6 +5,7 @@ import { Register } from '../screens/Register';
 import { useTheme } from 'styled-components';
 import { Platform } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import { Summary } from '../screens/Summary';
  
 const { Navigator, Screen } = createBottomTabNavigator();
 
@@ -55,7 +56,7 @@ export function AppRoutes() {
 			<Screen 
 				key="Summary"
 				name="Summary"
-				component={Register}
+				component={Summary}
 				options={{
 					tabBarIcon: (({ size, color }) => 
 						<MaterialIcons 
