@@ -10,12 +10,11 @@ import {
 } from '@expo-google-fonts/poppins';
 import AppLoading from 'expo-app-loading';
 import theme from './src/global/styles/theme';
-import { Register } from './src/screens/Register';
-import { CategorySelect } from './src/screens/CategorySelect';
 import { NavigationContainer } from '@react-navigation/native';
 import { AppRoutes } from './src/routes/app.routes';
 import 'intl';
 import 'intl/locale-data/jsonp/pt-BR';
+import { SignIn } from './src/screens/SignIn';
 
 export default function App() {
 
@@ -32,9 +31,9 @@ export default function App() {
   return (
 		<ThemeProvider theme={theme}>
 			<NavigationContainer>
-				<AppRoutes />
+				<StatusBar style="light"/>
+				<SignIn />
 			</NavigationContainer>
-			<StatusBar style="light"/>
 		</ThemeProvider>
   );
 }
