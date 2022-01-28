@@ -60,14 +60,13 @@ export function Dashboard() {
 	}
 
 	async function loadTransaction() {
-		const dataKey = '@gofinance:transactions';
-		const response = await AsyncStorage.getItem(dataKey);
-		const transactions = response ? JSON.parse(response) : [];
-
 		let entriesSum = 0;
 		let outcomeSum = 0;
 		let totalValue = 0;
 
+		const dataKey = '@gofinance:transactions';
+		const response = await AsyncStorage.getItem(dataKey);
+		const transactions = response ? JSON.parse(response) : [];
 
 		const transactionsFormatted: DataListProps[] = transactions.map((item: DataListProps) => {
 
@@ -174,6 +173,7 @@ export function Dashboard() {
 
 						<TransactionsList
 							data={transactions}
+							inverted={true}
 							keyExtractor={item => item.id}
 							renderItem={({ item }) => <TransactionCard  data={item}/>}
 						/>

@@ -27,7 +27,7 @@ interface FormProps {
 
 const schema = Yup.object().shape({
 	name: Yup.string().required('Name is required.'),
-	amount: Yup.number().typeError('Insert numeric value').positive('Only positive values.')
+	amount: Yup.number().typeError('Insert numeric value').positive('Only positive values.').required('Amount is required.')
 });
 
 export function Register() {
