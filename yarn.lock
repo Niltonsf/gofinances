@@ -1867,6 +1867,11 @@
   resolved "https://registry.yarnpkg.com/@react-native-firebase/auth/-/auth-14.3.0.tgz#55aa79a879985261ee98989e1c9c7e133125eba5"
   integrity sha512-5RBHrcOSEC9l5H4ea4t2LfZdMfB3zhW8mAa4ltop+S2sz0rL4ra3H3lxBSgoKoZYjWMRZOzHi4dTFEC+e3M8Jg==
 
+"@react-native-firebase/firestore@^14.3.0":
+  version "14.3.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/firestore/-/firestore-14.3.0.tgz#b60d16a7d39d64a3e45a7c2dabaf7679da542246"
+  integrity sha512-2G/Vh5o/ly7Tg00lkPDXkgwDptLLGPnuswJXq6aESRZL6gyRLUvFYgVQJd1c/pu0ft1ETNXhbmNSohunSbAC+g==
+
 "@react-native/normalize-color@^2.0.0":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@react-native/normalize-color/-/normalize-color-2.0.0.tgz#da955909432474a9a0fe1cbffc66576a0447f567"

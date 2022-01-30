@@ -23,6 +23,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ActivityIndicator } from 'react-native';
 import { useTheme } from 'styled-components'
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
 export interface DataListProps extends TransactionCardProps {
 	id: string;
@@ -39,6 +40,8 @@ interface HighlightDataProps {
 }
 
 export function Dashboard() {
+	const currentUser = auth().currentUser;
+
 	const [isLoading, setIsLoading] = useState(true);
 	const [transactions, setTransactions] = useState<DataListProps[]>([]);
 	const [higlightData, setHighlightData] = useState<HighlightDataProps>({} as HighlightDataProps);
@@ -68,11 +71,19 @@ export function Dashboard() {
 		let outcomeSum = 0;
 		let totalValue = 0;
 
-		console.log(auth().currentUser);
+		const transactions: DataListProps[] = [];
 
-		const dataKey = '@gofinance:transactions';
-		const response = await AsyncStorage.getItem(dataKey);
-		const transactions = response ? JSON.parse(response) : [];
+		await firestore().collection(currentUser!.uid).get().then(querySnapshot => {
+			querySnapshot.forEach(documentsSnapshot => {
+				const documentData = documentsSnapshot.data();
+				const newDocument: any = {
+					...documentData,
+					date: documentData.date.toDate()
+				}
+				transactions.push(newDocument);
+			});
+		});
+
 
 		const transactionsFormatted: DataListProps[] = transactions.map((item: DataListProps) => {
 

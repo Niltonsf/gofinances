@@ -19,7 +19,9 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import uuid from 'react-native-uuid';
 import { useNavigation } from '@react-navigation/native'
- 
+import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
+
 interface FormProps {
 	name: string;
 	amount: string;
@@ -31,6 +33,8 @@ const schema = Yup.object().shape({
 });
 
 export function Register() {
+
+	const currentUser = auth().currentUser;
 
 	const navigation = useNavigation();
 
@@ -72,15 +76,7 @@ export function Register() {
 		}
 
 		try {
-			const data = await AsyncStorage.getItem(dataKey);
-			const currentData = data ? JSON.parse(data) : [];
-
-			const dataFormatted = [
-				...currentData,
-				newTransaction
-			];
-
-			await AsyncStorage.setItem(dataKey, JSON.stringify(dataFormatted));
+			firestore().collection(currentUser!.uid).add(newTransaction);
 
 			// RESETING FIELDS
 			setTransactionType('');

@@ -23,6 +23,7 @@ import * as Yup from 'yup';
 import { Button } from '../../components/Form/Button';
 import auth from '@react-native-firebase/auth';
 import { ActivityIndicator } from 'react-native';
+import firestore from '@react-native-firebase/firestore';
 
 interface LoginProps {
 	email: string;
@@ -61,10 +62,12 @@ export function SignIn(){
 		setIsLoading(true);
 		
 		auth().createUserWithEmailAndPassword(form.email, form.password)
-		.then((user) => Alert.alert('Success in creating account!'))
+		.then((user) => {
+			Alert.alert('User successfully registered');
+		})
 		.catch((error) => {
 			setIsLoading(false);
-			Alert.alert(error.message)
+			console.log(error.message);
 		});
 	}
 
