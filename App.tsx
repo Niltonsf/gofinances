@@ -1,5 +1,4 @@
-import React from 'react';
-import { Dashboard } from './src/screens/Dashboard';
+import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { ThemeProvider } from 'styled-components';
 import {
@@ -15,6 +14,7 @@ import { AppRoutes } from './src/routes/app.routes';
 import 'intl';
 import 'intl/locale-data/jsonp/pt-BR';
 import { SignIn } from './src/screens/SignIn';
+import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 
 export default function App() {
 
@@ -23,6 +23,12 @@ export default function App() {
 		Poppins_500Medium,
 		Poppins_700Bold
 	});
+	const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null);
+
+	useEffect(() => {
+		const subscriber = auth().onAuthStateChanged(setUser);
+		return subscriber;
+	}, []);
 
 	if (!fontsLoaded) {
 		return <AppLoading />;
@@ -30,10 +36,12 @@ export default function App() {
 
   return (
 		<ThemeProvider theme={theme}>
+			<StatusBar style="light"/>
 			<NavigationContainer>
-				<StatusBar style="light"/>
-				<SignIn />
-			</NavigationContainer>
+
+				{ user ? <AppRoutes /> : <SignIn /> }
+			
+			</NavigationContainer>						
 		</ThemeProvider>
   );
 }

@@ -5,6 +5,12 @@
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"
+    ],
+		"ios": {
+      "googleServicesFile": "./ios/GoogleService-Info.plist"
+    },
+    "plugins": [
+      "@react-native-firebase/app"
     ]
   },
   "name": "gofinances"

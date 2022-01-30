@@ -14,7 +14,7 @@ import {
 	Title,
 	TransactionsList,
 	LogoutButton,
-	LoadingContainer
+	LoadingContainer,
 } from './styles';
 import { HighLightCard } from '../../components/HighLightCard';
 import { TransactionCard, TransactionCardProps } from '../../components/TransactionCard';
@@ -22,7 +22,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ActivityIndicator } from 'react-native';
 import { useTheme } from 'styled-components'
-import { StringLocale } from 'yup/lib/locale';
+import auth from '@react-native-firebase/auth';
 
 export interface DataListProps extends TransactionCardProps {
 	id: string;
@@ -44,6 +44,10 @@ export function Dashboard() {
 	const [higlightData, setHighlightData] = useState<HighlightDataProps>({} as HighlightDataProps);
 	const theme = useTheme();
 
+	function logOut() {
+		auth().signOut();
+	}
+
 	function getLastTransactionDate(collection: DataListProps[], type: 'positive' | 'negative') {
 		const lastTransaction = new Date(
 			Math.max.apply(Math, collection
@@ -63,6 +67,8 @@ export function Dashboard() {
 		let entriesSum = 0;
 		let outcomeSum = 0;
 		let totalValue = 0;
+
+		console.log(auth().currentUser);
 
 		const dataKey = '@gofinance:transactions';
 		const response = await AsyncStorage.getItem(dataKey);
@@ -99,23 +105,22 @@ export function Dashboard() {
 
 		const lastTransactionEntries = getLastTransactionDate(transactions, 'positive');
 		const lastTransactionOutcome = getLastTransactionDate(transactions, 'negative');
-		const totalInterval = `from 01 to ${lastTransactionEntries}`;
+		const totalInterval = lastTransactionEntries === 'NaN of Invalid Date' ? 'No transactions' : `from 01 to ${lastTransactionEntries}`;
 
-	
 		setHighlightData({
 			entries: {
 				amount: entriesSum.toLocaleString('pt-BR', {
 					style: 'currency',
 					currency: 'BRL'
 				}),
-				lastTransaction: `Last income was ${lastTransactionEntries}`
+				lastTransaction: lastTransactionOutcome === 'NaN of Invalid Date' ? 'No transactions' : `Last income was ${lastTransactionEntries}`
 			},
 			outcome: {
 				amount: outcomeSum.toLocaleString('pt-BR', {
 					style: 'currency',
 					currency: 'BRL'
 				}),
-				lastTransaction: `Last outcome was ${lastTransactionOutcome}`
+				lastTransaction: lastTransactionOutcome === 'NaN of Invalid Date' ? 'No transactions' : `Last outcome was ${lastTransactionOutcome}`
 			},
 			total: {
 				amount: totalValue.toLocaleString('pt-BR', {
@@ -124,7 +129,7 @@ export function Dashboard() {
 				}),
 				lastTransaction: totalInterval
 			}
-		})
+		});
 
 		setIsLoading(false);
 	}
@@ -156,7 +161,7 @@ export function Dashboard() {
 								</User>
 							</UserInfo>
 
-							<LogoutButton onPress={() => {}}>
+							<LogoutButton onPress={logOut}>
 								<Icon name="power"/>
 							</LogoutButton>
 						</UserWrapper>
@@ -169,14 +174,13 @@ export function Dashboard() {
 					</HighLightCards>
 
 					<Transactions>
-						<Title>Listagem</Title>
-
-						<TransactionsList
-							data={transactions}
-							inverted={true}
-							keyExtractor={item => item.id}
-							renderItem={({ item }) => <TransactionCard  data={item}/>}
-						/>
+						<Title>Transactions</Title>
+							<TransactionsList
+								data={transactions}
+								inverted={true}
+								keyExtractor={item => item.id}
+								renderItem={({ item }) => <TransactionCard  data={item}/>}
+							/>
 					</Transactions>
 				</>
 			}

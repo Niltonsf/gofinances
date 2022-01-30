@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
 	Container,
 	Header,
@@ -7,7 +7,8 @@ import {
 	Footer,
 	Form,
 	Fields,
-	Spacing
+	Spacing,
+	LoadingContainer
 } from './styles';
 import { TouchableWithoutFeedback, Keyboard, Alert } from 'react-native';
 import LogoSvg from '../../assets/logo.svg';
@@ -20,6 +21,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import { Button } from '../../components/Form/Button';
+import auth from '@react-native-firebase/auth';
+import { ActivityIndicator } from 'react-native';
 
 interface LoginProps {
 	email: string;
@@ -39,15 +42,41 @@ const DismissKeyboard = ({ children }: any) => (
 
 export function SignIn(){
 	const theme = useTheme();
+	const [isLoading, setIsLoading] = useState(false);
 
 	const { control, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(schema)});
 
 	function handleLogin(form: LoginProps) {
-		console.log(form);
+		setIsLoading(true);
+
+		auth().signInWithEmailAndPassword(form.email, form.password)
+		.then(() => {})
+		.catch((error) => {
+			setIsLoading(false);
+			Alert.alert(error.message)
+		})
+	}
+
+	function handleRegister(form: LoginProps) {
+		setIsLoading(true);
+		
+		auth().createUserWithEmailAndPassword(form.email, form.password)
+		.then((user) => Alert.alert('Success in creating account!'))
+		.catch((error) => {
+			setIsLoading(false);
+			Alert.alert(error.message)
+		});
 	}
 
 	return (
-		<DismissKeyboard>
+		<>
+		{
+			isLoading ?
+			<LoadingContainer>
+				<ActivityIndicator color={theme.colors.orange} size='large'/>
+			</LoadingContainer>
+			:
+			<DismissKeyboard>
 			<Container>
 				<LinearGradient
 					colors={[`${theme.colors.blue}`, `${theme.colors.text_dark}`]}
@@ -94,7 +123,7 @@ export function SignIn(){
 							<Spacing>
 								<Button title="Login" onPress={handleSubmit(handleLogin as any)}/>
 							</Spacing>		
-							<Button title="Register" onPress={() => {}}/>
+							<Button title="Register" onPress={handleSubmit(handleRegister as any)}/>
 						</Form>
 
 					</Footer>
@@ -102,5 +131,7 @@ export function SignIn(){
 				</LinearGradient>
 			</Container>
 		</DismissKeyboard>
+		}
+		</>
 	);
 }

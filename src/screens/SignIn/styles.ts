@@ -1,5 +1,6 @@
 import { RFValue } from 'react-native-responsive-fontsize';
 import styled from 'styled-components/native';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export const Container = styled.View`
 	flex: 1;
@@ -42,4 +43,16 @@ export const Fields = styled.View`
 
 export const Spacing = styled.View`
 	margin-bottom: 10px;
+`;
+
+export const LoadingContainer = styled(LinearGradient).attrs({
+	colors: ['#5636D3', '#000000'],
+	locations: [0.8, 0.1],
+	style: {
+		flex:1, 
+	}
+})`
+	flex: 1;
+	justify-content: center;
+	align-items: center;
 `;
