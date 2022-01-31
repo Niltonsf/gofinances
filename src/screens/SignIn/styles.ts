@@ -21,7 +21,7 @@ export const TitleWrapper = styled.View`
 export const Title = styled.Text`
 	font-family: ${({ theme }) => theme.fonts.medium};
 	color: ${({ theme}) => theme.colors.shapeColor};
-	font-size: ${RFValue(30)}px;
+	font-size: ${RFValue(25)}px;
 	text-align: center;
 	margin-top: 45px;
 `;

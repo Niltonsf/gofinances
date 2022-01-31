@@ -23,9 +23,9 @@ import * as Yup from 'yup';
 import { Button } from '../../components/Form/Button';
 import auth from '@react-native-firebase/auth';
 import { ActivityIndicator } from 'react-native';
-import LogoLottie from '../../assets/lottieLogo.json';
-import Lottie from 'lottie-react-native';
 import firestore from '@react-native-firebase/firestore';
+import LottieView from 'lottie-react-native';
+import LogoImage from '../../assets/lottieLogo.json';
 
 interface LoginProps {
 	email: string;
@@ -93,8 +93,17 @@ export function SignIn(){
 					<Header>
 
 						<TitleWrapper>
-							<Lottie source={LogoLottie} autoPlay loop />						
-
+							
+							<LottieView 
+							source={LogoImage} 
+							style={{
+								width: 150,
+								height: 150,																	
+							}}
+							autoPlay
+							loop
+							resizeMode='contain'
+							/>
 							<Title>
 								Control you finances {'\n'}in a simple way.
 							</Title>

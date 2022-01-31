@@ -21,6 +21,8 @@ import { useTheme } from 'styled-components';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { addMonths, subMonths, format } from 'date-fns';
 import { useFocusEffect } from '@react-navigation/native';
+import firestore from '@react-native-firebase/firestore';
+import { useAuth } from '../../hooks/auth';
 
 interface TransactionData {
 	type: 'positive' | 'negative';
@@ -41,6 +43,7 @@ interface CategoryData {
 
 
 export function Summary(){
+	const { uid } = useAuth();
 	const [isLoading, setIsLoading] = useState(false);
 	const [selectedDate, setSelectedDate] = useState(new Date());
 	const [totalByCategories, setTotalByCategories] = useState<CategoryData[]>([]);
@@ -57,10 +60,21 @@ export function Summary(){
 	async function loadData() {
 		setIsLoading(true);
 		const totalByCategory: CategoryData[] = [];
+		const responseFormatted: any = [];
 
-		const dataKey = '@gofinance:transactions';
-		const response = await AsyncStorage.getItem(dataKey);
-		const responseFormatted = response ? JSON.parse(response) : [];
+		await firestore()
+		.collection(uid!)
+		.orderBy('date')
+		.get().then(querySnapshot => {
+			querySnapshot.forEach(documentsSnapshot => {
+				const documentData = documentsSnapshot.data();
+				const newDocument: any = {
+					...documentData,
+					date: documentData.date.toDate()
+				}
+				responseFormatted.push(newDocument);
+			});
+		});
 
 		const outcomes = responseFormatted
 		.filter((outcome: TransactionData) => 
