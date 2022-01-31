@@ -19,7 +19,7 @@ import {
 import { HighLightCard } from '../../components/HighLightCard';
 import { TransactionCard, TransactionCardProps } from '../../components/TransactionCard';
 import { useFocusEffect } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAuth } from '../../hooks/auth';
 import { ActivityIndicator } from 'react-native';
 import { useTheme } from 'styled-components'
 import auth from '@react-native-firebase/auth';
@@ -40,7 +40,7 @@ interface HighlightDataProps {
 }
 
 export function Dashboard() {
-	const currentUser = auth().currentUser;
+	const { uid, userSettings } = useAuth();
 
 	const [isLoading, setIsLoading] = useState(true);
 	const [transactions, setTransactions] = useState<DataListProps[]>([]);
@@ -73,7 +73,10 @@ export function Dashboard() {
 
 		const transactions: DataListProps[] = [];
 
-		await firestore().collection(currentUser!.uid).get().then(querySnapshot => {
+		await firestore()
+		.collection(uid!)
+		.orderBy('date')
+		.get().then(querySnapshot => {
 			querySnapshot.forEach(documentsSnapshot => {
 				const documentData = documentsSnapshot.data();
 				const newDocument: any = {
@@ -168,7 +171,7 @@ export function Dashboard() {
 								<Photo source={{ uri: 'http://github.com/niltonsf.png'}}/>
 								<User>
 									<UserGreeting>Ola,</UserGreeting>
-									<UserName>Nilton</UserName>
+									<UserName>{userSettings.name}</UserName>
 								</User>
 							</UserInfo>
 

@@ -15,6 +15,7 @@ import 'intl';
 import 'intl/locale-data/jsonp/pt-BR';
 import { SignIn } from './src/screens/SignIn';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
+import { AuthProvider } from './src/hooks/auth';
 
 export default function App() {
 
@@ -39,7 +40,12 @@ export default function App() {
 			<StatusBar style="light"/>
 			<NavigationContainer>
 
-				{ user ? <AppRoutes /> : <SignIn /> }
+				{ user ? 
+					<AuthProvider>
+						<AppRoutes />
+					</AuthProvider> :
+					<SignIn /> 
+				}
 			
 			</NavigationContainer>						
 		</ThemeProvider>
