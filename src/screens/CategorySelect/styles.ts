@@ -2,6 +2,7 @@ import { RFValue } from 'react-native-responsive-fontsize';
 import styled from 'styled-components/native';
 import { Feather } from '@expo/vector-icons';
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import theme from '../../global/styles/theme';
  
 interface CategoryProps {
 	isActive: boolean;
@@ -28,25 +29,38 @@ export const Title = styled.Text`
 `;
 
 export const Category = styled.TouchableOpacity<CategoryProps>`
-	width: 100%;
+	width: 44%;
 	padding: ${RFValue(15)}px;
-	flex-direction: row;
+	margin: ${RFValue(10)}px;
+	flex-direction: column;
 	align-items: center;
+	justify-content: center;
+	border-radius: 10px;
+	elevation: 1;
+	shadowColor: 'rgba(0,0,0, 0.6)';
+	shadowRadius: 10px;	
+	shadowOpacity: 1;
 
 	background-color: ${({ isActive, theme }) => 
 		isActive ? theme.colors.orange_attention :
-		theme.colors.background
+		'rgba(86, 54, 211, 0.9)'
 	}
 `;
 
-export const Icon = styled(Feather)`
+export const Icon = styled(Feather)<CategoryProps>`
 	font-size: ${RFValue(20)}px;
-	margin-right: 16px;
+	color: ${({ isActive }) => 
+		isActive ? 'rgb(0, 0, 0)' : 'rgb(255, 255, 255)'
+	};
+	margin-bottom: ${RFValue(5)}px;
 `;
 
-export const Name = styled.Text`
+export const Name = styled.Text<CategoryProps>`
 	font-family: ${({ theme }) => theme.fonts.regular};
 	font-size: ${RFValue(14)}px;
+	color: ${({ isActive }) => 
+		isActive ? 'rgb(0, 0, 0)' : 'rgb(255, 255, 255)'
+	}
 `;
 
 export const Separator = styled.View`

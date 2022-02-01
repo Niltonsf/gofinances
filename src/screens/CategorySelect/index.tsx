@@ -43,17 +43,17 @@ export function CategorySelect({
 			<FlatList 
 				data={categories}
 				style={{flex:1, width: '100%'}}
+				numColumns={2}
 				keyExtractor={(item) => item.key}
 				renderItem={({ item }) => (
 					<Category 
 						onPress={() => handleCategorySelect(item)}
 						isActive={category.key === item.key}
 					>
-						<Icon name={item.icon} />
-						<Name>{item.name}</Name>
+						<Icon name={item.icon} isActive={category.key === item.key} />
+						<Name isActive={category.key === item.key}>{item.name}</Name>
 					</Category>
-				)}
-				ItemSeparatorComponent={() => <Separator />}
+				)}		
 			/>
 
 			<Footer>

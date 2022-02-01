@@ -71,6 +71,8 @@ export function Dashboard() {
 		let outcomeSum = 0;
 		let totalValue = 0;
 
+		const currentMonth = new Date().getMonth();
+		const currentYear = new Date().getFullYear();
 		const transactions: DataListProps[] = [];
 
 		await firestore()
@@ -87,8 +89,14 @@ export function Dashboard() {
 			});
 		});
 
+		// Filtering current month transacations
+		const filteredTransactions = transactions.filter((item: DataListProps) => {
+			const itemYear = new Date(item.date).getFullYear();
+			const itemMonth = new Date(item.date).getMonth(); // 0 a 11
+			if (itemYear === currentYear && itemMonth === currentMonth) return item;
+		});
 
-		const transactionsFormatted: DataListProps[] = transactions.map((item: DataListProps) => {
+		const transactionsFormatted: DataListProps[] = filteredTransactions.map((item: DataListProps) => {
 
 			item.type === 'positive' ? entriesSum += Number(item.amount) : outcomeSum += Number(item.amount);
 
@@ -117,8 +125,8 @@ export function Dashboard() {
 
 		setTransactions(transactionsFormatted);
 
-		const lastTransactionEntries = getLastTransactionDate(transactions, 'positive');
-		const lastTransactionOutcome = getLastTransactionDate(transactions, 'negative');
+		const lastTransactionEntries = getLastTransactionDate(filteredTransactions, 'positive');
+		const lastTransactionOutcome = getLastTransactionDate(filteredTransactions, 'negative');
 		const totalInterval = lastTransactionEntries === 'NaN of Invalid Date' ? 'No transactions' : `from 01 to ${lastTransactionEntries}`;
 
 		setHighlightData({
