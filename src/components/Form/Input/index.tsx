@@ -4,8 +4,12 @@ import { Container } from './styles';
 
 type InputProps = TextInputProps;
 
-export function Input({...rest} : InputProps){
+interface ErrorProps extends InputProps {
+	error?: string;
+}
+
+export function Input({...rest} : ErrorProps){
 	return (
-		<Container {...rest} />
+		<Container {...rest} error={rest.error!}/>
 	);
 }

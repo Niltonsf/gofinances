@@ -16,15 +16,15 @@ export function InputForm({ control, name, error, ...rest }: Props){
 			<Controller
 				control={control}
 				render={({ field: { onChange, value }}) => (
-					<Input
+					<Input						
 						onChangeText={onChange}
 						value={value}	
+						error={error!}
 						{...rest}
 					/>
 				)}
 				name={name}
 			/>
-			{error && <Error>{error}</Error>}
 		</Container>
 	);
 }

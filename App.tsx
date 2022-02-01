@@ -13,9 +13,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { AppRoutes } from './src/routes/app.routes';
 import 'intl';
 import 'intl/locale-data/jsonp/pt-BR';
-import { SignIn } from './src/screens/SignIn';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { AuthProvider } from './src/hooks/auth';
+import { AuthRoutes } from './src/routes/auth.routes';
 
 export default function App() {
 
@@ -43,8 +43,9 @@ export default function App() {
 				{ user ? 
 					<AuthProvider>
 						<AppRoutes />
-					</AuthProvider> :
-					<SignIn /> 
+					</AuthProvider> 
+					:
+					<AuthRoutes />
 				}
 			
 			</NavigationContainer>						

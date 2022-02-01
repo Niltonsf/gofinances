@@ -8,11 +8,10 @@ import {
 	Form,
 	Fields,
 	Spacing,
-	LoadingContainer
+	ForgotPassContainer,
+	ForgotText
 } from './styles';
-import { TouchableWithoutFeedback, Keyboard, Alert } from 'react-native';
-import LogoSvg from '../../assets/logo.svg';
-import { RFValue } from 'react-native-responsive-fontsize';
+import { Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useTheme } from 'styled-components';
 // FORM
@@ -22,10 +21,11 @@ import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import { Button } from '../../components/Form/Button';
 import auth from '@react-native-firebase/auth';
-import { ActivityIndicator } from 'react-native';
-import firestore from '@react-native-firebase/firestore';
 import LottieView from 'lottie-react-native';
 import LogoImage from '../../assets/lottieLogo.json';
+import { Divider } from '../../components/Divider';
+import DismissKeyboard from '../../components/DismissKeyboard';
+import LoadingCard from '../../components/LoadingCard';
 
 interface LoginProps {
 	email: string;
@@ -37,13 +37,7 @@ const schema = Yup.object().shape({
 	password: Yup.string().required('Password is required.'),
 });
 
-const DismissKeyboard = ({ children }: any) => (
-	<TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-		{children}
-	</TouchableWithoutFeedback>
-);
-
-export function SignIn(){
+export function SignIn({ navigation }: any){
 	const theme = useTheme();
 	const [isLoading, setIsLoading] = useState(false);
 
@@ -57,19 +51,6 @@ export function SignIn(){
 		.catch((error) => {
 			setIsLoading(false);
 			Alert.alert(error.message)
-		})
-	}
-
-	function handleRegister(form: LoginProps) {
-		setIsLoading(true);
-		
-		auth().createUserWithEmailAndPassword(form.email, form.password)
-		.then((user) => {
-			Alert.alert('User successfully registered');
-		})
-		.catch((error) => {
-			setIsLoading(false);
-			console.log(error.message);
 		});
 	}
 
@@ -77,23 +58,19 @@ export function SignIn(){
 		<>
 		{
 			isLoading ?
-			<LoadingContainer>
-				<ActivityIndicator color={theme.colors.orange} size='large'/>
-			</LoadingContainer>
+			<LoadingCard />
 			:
 			<DismissKeyboard>
 			<Container>
 				<LinearGradient
-					colors={[`${theme.colors.blue}`, `${theme.colors.text_dark}`]}
+					colors={[`${theme.colors.shapeColor}`, `${theme.colors.blue}`]}
 					locations={[0.8, 0.1]}
 					style={{
 						flex:1, 
 					}}
 				>
 					<Header>
-
-						<TitleWrapper>
-							
+						<TitleWrapper>					
 							<LottieView 
 							source={LogoImage} 
 							style={{
@@ -119,22 +96,31 @@ export function SignIn(){
 										name="email" 
 										keyboardType="email-address" 
 										control={control} 
-										error={errors.email && errors.email.message}
+										autoCapitalize='none'
+										error={errors.email && errors.email.message}								
 									/>
 								</Spacing>
 								<InputForm 
 									placeholder="Password" 
 									name="password" 
 									secureTextEntry={true} 
+									autoCapitalize='none'
 									control={control} 
 									error={errors.password && errors.password.message}
 								/>
 							</Fields>
 
+							<ForgotPassContainer>
+								<ForgotText>Forgot password?</ForgotText>
+							</ForgotPassContainer>
+
 							<Spacing>
 								<Button title="Login" onPress={handleSubmit(handleLogin as any)}/>
 							</Spacing>		
-							<Button title="Register" onPress={handleSubmit(handleRegister as any)}/>
+
+							<Divider text='OR' />
+
+							<Button title="SignUp" onPress={() => navigation.navigate('SignUp')}/>
 						</Form>
 
 					</Footer>

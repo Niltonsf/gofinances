@@ -127,7 +127,7 @@ export function Dashboard() {
 					style: 'currency',
 					currency: 'BRL'
 				}),
-				lastTransaction: lastTransactionOutcome === 'NaN of Invalid Date' ? 'No transactions' : `Last income was ${lastTransactionEntries}`
+				lastTransaction: lastTransactionEntries === 'NaN of Invalid Date' ? 'No transactions' : `Last income was ${lastTransactionEntries}`
 			},
 			outcome: {
 				amount: outcomeSum.toLocaleString('pt-BR', {
