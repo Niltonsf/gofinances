@@ -88,7 +88,7 @@ export function Register() {
 				}
 			);
 			reset();
-			navigation.navigate('Listing');
+			navigation.navigate('Listing' as any);
 		} catch (e) {
 			console.log(e);
 			Alert.alert("Something went wrong on saving!");

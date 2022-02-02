@@ -46,6 +46,7 @@ export function SignUp({ navigation }: any) {
 		setIsLoading(true);
 
 		if(form.password !== form.passwordConfirm) {
+			setIsLoading(false);
 			return Alert.alert(`Passwords doesn't match`);
 		};
 		
