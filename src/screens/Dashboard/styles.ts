@@ -90,12 +90,19 @@ export const TransactionsList = styled(
 	).attrs({
 	showsVerticalScrollIndicator: false,
 	contentContainerStyle: {
-		paddingBottom: getBottomSpace()
-	}
-})``;
+		paddingBottom: getBottomSpace(),
+	},
+})`
+`;
 
 export const LoadingContainer = styled.View`
 	flex: 1;
 	justify-content: center;
 	align-items: center;
+`;
+
+export const NoTransaction = styled.View`
+	flex: 1;
+	align-items: center;
+	justify-content: center;
 `;

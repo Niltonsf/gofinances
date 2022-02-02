@@ -1,8 +1,7 @@
 import { RFValue } from 'react-native-responsive-fontsize';
 import styled from 'styled-components/native';
-import { Feather } from '@expo/vector-icons';
+import { Feather, FontAwesome5 } from '@expo/vector-icons';
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
-import theme from '../../global/styles/theme';
  
 interface CategoryProps {
 	isActive: boolean;
@@ -47,7 +46,7 @@ export const Category = styled.TouchableOpacity<CategoryProps>`
 	}
 `;
 
-export const Icon = styled(Feather)<CategoryProps>`
+export const Icon = styled(FontAwesome5)<CategoryProps>`
 	font-size: ${RFValue(20)}px;
 	color: ${({ isActive }) => 
 		isActive ? 'rgb(0, 0, 0)' : 'rgb(255, 255, 255)'

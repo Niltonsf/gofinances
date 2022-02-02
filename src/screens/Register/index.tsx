@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Modal, TouchableWithoutFeedback, Keyboard, Alert } from 'react-native';
 import { Button } from '../../components/Form/Button';
 import { CategorySelectButton } from '../../components/Form/CategorySelectButton';
@@ -22,6 +22,9 @@ import { useNavigation } from '@react-navigation/native'
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 
+import { InputPrice } from '../../components/Form/InputPrice';
+import CurrencyInput from 'react-native-currency-input';
+
 interface FormProps {
 	name: string;
 	amount: string;
@@ -37,7 +40,7 @@ export function Register() {
 	const currentUser = auth().currentUser;
 
 	const navigation = useNavigation();
-
+	
 	const [transactionType, setTransactionType] = useState('');
 	const [categoryModalOpen, setCategoryModalOpen] = useState(false);
 	const [category, setCategory] = useState({
@@ -60,8 +63,6 @@ export function Register() {
 	}
 
 	async function handleRegister(form: FormProps) {
-		const dataKey = '@gofinance:transactions';
-
 		if(!transactionType) return Alert.alert('Select a transaction type.');
 		
 		if(category.key === 'category') return Alert.alert('Select a category.');
@@ -103,7 +104,7 @@ export function Register() {
 				<Form>
 					<Fields>
 						<InputForm placeholder="Name" name="name" control={control} autoCapitalize="sentences" autoCorrect={false} error={errors.name && errors.name.message}/>
-						<InputForm placeholder="Price" name="amount" control={control} keyboardType="numeric" error={errors.amount && errors.amount.message}/>
+						<InputForm placeholder="Price" name="amount" control={control} keyboardType="numeric" error={errors.amount && errors.amount.message} />												
 						<TransactionTypes>
 							<TransactionTypeButton type="up" title="Income" onPress={() => handleTransactionType('positive')}
 								isActive={transactionType === 'positive'}

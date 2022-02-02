@@ -15,6 +15,7 @@ import {
 	TransactionsList,
 	LogoutButton,
 	LoadingContainer,
+	NoTransaction
 } from './styles';
 import { HighLightCard } from '../../components/HighLightCard';
 import { TransactionCard, TransactionCardProps } from '../../components/TransactionCard';
@@ -24,6 +25,8 @@ import { ActivityIndicator } from 'react-native';
 import { useTheme } from 'styled-components'
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+import LottieView from 'lottie-react-native';
+import NoTransactionLottie from '../../assets/no_transactions.json';
 
 export interface DataListProps extends TransactionCardProps {
 	id: string;
@@ -85,7 +88,7 @@ export function Dashboard() {
 					...documentData,
 					date: documentData.date.toDate()
 				}
-				transactions.push(newDocument);
+				transactions.unshift(newDocument);
 			});
 		});
 
@@ -197,12 +200,27 @@ export function Dashboard() {
 
 					<Transactions>
 						<Title>Transactions</Title>
+						{
+							transactions.length <= 0 ?
+							<NoTransaction>
+								<LottieView 
+									source={NoTransactionLottie}
+									style={{
+										width: 100,
+										height: 100,																	
+									}}
+									autoPlay
+									loop
+									resizeMode='contain'
+								/>
+							</NoTransaction>
+							:
 							<TransactionsList
-								data={transactions}
-								inverted={true}
+								data={transactions}						
 								keyExtractor={item => item.id}
 								renderItem={({ item }) => <TransactionCard  data={item}/>}
 							/>
+						}
 					</Transactions>
 				</>
 			}

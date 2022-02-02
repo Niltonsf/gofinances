@@ -5,7 +5,7 @@ import { Container } from './styles';
 type InputProps = TextInputProps;
 
 interface ErrorProps extends InputProps {
-	error?: string;
+	error?: any;
 }
 
 export function Input({...rest} : ErrorProps){
