@@ -1,12 +1,19 @@
 {
   "expo": {
-    "name": "gofinances",
-    "slug": "gofinances",
+    "name": "Finances",
+    "slug": "finances",
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"
     ],
+		"icon": "./src/assets/icon.png",
+		"splash": {
+			"image": "./src/assets/splash.png",
+			"resizeMode": "contain",
+			"backgroundColor": "#5636D3"
+		},
 		"ios": {
+			"supportsTablet": true,
       "googleServicesFile": "./ios/GoogleService-Info.plist"
     },
     "plugins": [
