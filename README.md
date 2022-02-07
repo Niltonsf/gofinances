@@ -5,3 +5,6 @@
 1. Clone the project: `git clone https://github.com/Niltonsf/gofinances.git`
 2. Install dependencies using `yarn` or `npm i`
 3. Run the project `yarn start`
+
+## How to use
+1.
