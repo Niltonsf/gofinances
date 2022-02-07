@@ -4,7 +4,7 @@
 ## How to run
 1. Clone the project: `git clone https://github.com/Niltonsf/gofinances.git`
 2. Install dependencies using `yarn` or `npm i`
-3. Run the project `yarn start`
+3. Run the project `yarn ios` for IOS or `yarn android` for Android 
 
 ## How to use
 1.
