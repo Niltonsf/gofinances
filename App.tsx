@@ -10,15 +10,25 @@ import {
 import AppLoading from 'expo-app-loading';
 import theme from './src/global/styles/theme';
 import { NavigationContainer } from '@react-navigation/native';
-import { AppRoutes } from './src/routes/app.routes';
 import 'intl';
 import 'intl/locale-data/jsonp/pt-BR';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { AuthProvider } from './src/hooks/auth';
 import { AuthRoutes } from './src/routes/auth.routes';
+import { DrawerRoutes } from './src/routes/drawer.routes';
+
+//REDUX
+import { createStore, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux';
+import thunk from 'redux-thunk';
+import rootReducer from './src/stores/rootReducer';
+
+const store = createStore(
+	rootReducer,
+	applyMiddleware(thunk)
+);
 
 export default function App() {
-
 	const [ fontsLoaded ] = useFonts({
 		Poppins_400Regular,
 		Poppins_500Medium,
@@ -37,18 +47,18 @@ export default function App() {
 
   return (
 		<ThemeProvider theme={theme}>
-			<StatusBar style="light"/>
-			<NavigationContainer>
-
-				{ user ? 
-					<AuthProvider>
-						<AppRoutes />
-					</AuthProvider> 
-					:
-					<AuthRoutes />
-				}
-			
-			</NavigationContainer>						
+			<StatusBar style="light"/>		
+			<Provider store={store}>
+				<NavigationContainer>
+					{ user ? 
+						<AuthProvider>
+							<DrawerRoutes /> 
+						</AuthProvider>
+						:
+						<AuthRoutes />
+					}				
+				</NavigationContainer>	
+			</Provider>
 		</ThemeProvider>
   );
 }

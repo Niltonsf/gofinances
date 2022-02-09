@@ -8,12 +8,10 @@ import {
 	UserGreeting,
 	UserName,
 	UserWrapper,
-	Icon,
 	HighLightCards,
 	Transactions,
 	Title,
 	TransactionsList,
-	LogoutButton,
 	LoadingContainer,
 	NoTransaction
 } from './styles';
@@ -23,10 +21,10 @@ import { useFocusEffect } from '@react-navigation/native';
 import { useAuth } from '../../hooks/auth';
 import { ActivityIndicator } from 'react-native';
 import { useTheme } from 'styled-components'
-import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import LottieView from 'lottie-react-native';
 import NoTransactionLottie from '../../assets/no_transactions.json';
+import Animated from 'react-native-reanimated';
 
 export interface DataListProps extends TransactionCardProps {
 	id: string;
@@ -42,17 +40,13 @@ interface HighlightDataProps {
 	total: PropsHighLight;
 }
 
-export function Dashboard() {
+export function Dashboard({ drawerAnimationStyle }: any) {
 	const { uid, userSettings } = useAuth();
 
 	const [isLoading, setIsLoading] = useState(true);
 	const [transactions, setTransactions] = useState<DataListProps[]>([]);
 	const [higlightData, setHighlightData] = useState<HighlightDataProps>({} as HighlightDataProps);
 	const theme = useTheme();
-
-	function logOut() {
-		auth().signOut();
-	}
 
 	function getLastTransactionDate(collection: DataListProps[], type: 'positive' | 'negative') {
 		const lastTransaction = new Date(
@@ -168,62 +162,60 @@ export function Dashboard() {
 	}, []))
 
 	return (
-		<Container>
-      {
-				isLoading ? 
-				<LoadingContainer>
-					<ActivityIndicator color={theme.colors.orange} size='large'/>
-				</LoadingContainer>
-				:
-				<>
-					<Header>
-						<UserWrapper>
-							<UserInfo>
-								<Photo source={{ uri: 'http://github.com/niltonsf.png'}}/>
-								<User>
-									<UserGreeting>Ola,</UserGreeting>
-									<UserName>{userSettings.name}</UserName>
-								</User>
-							</UserInfo>
+		<Animated.View style={{ flex: 1, ...drawerAnimationStyle}}>
+			<Container>
+				{
+					isLoading ? 
+					<LoadingContainer>
+						<ActivityIndicator color={theme.colors.orange} size='large'/>
+					</LoadingContainer>
+					:
+					<>
+						<Header>
+							<UserWrapper>
+								<UserInfo>
+									<Photo source={{ uri: 'http://github.com/niltonsf.png'}}/>
+									<User>
+										<UserGreeting>Ola,</UserGreeting>
+										<UserName>{userSettings.name}</UserName>
+									</User>
+								</UserInfo>
+							</UserWrapper>
+						</Header>
 
-							<LogoutButton onPress={logOut}>
-								<Icon name="power"/>
-							</LogoutButton>
-						</UserWrapper>
-					</Header>
+						<HighLightCards>
+							<HighLightCard type="up" title="Income" amount={higlightData.entries.amount} lastTransaction={higlightData.entries.lastTransaction}/>
+							<HighLightCard type="down"title="Outcome" amount={higlightData.outcome.amount}lastTransaction={higlightData.outcome.lastTransaction}/>
+							<HighLightCard type="total" title="Total" amount={higlightData.total.amount} lastTransaction={higlightData.total.lastTransaction}/>
+						</HighLightCards>
 
-					<HighLightCards>
-						<HighLightCard type="up" title="Income" amount={higlightData.entries.amount} lastTransaction={higlightData.entries.lastTransaction}/>
-						<HighLightCard type="down"title="Outcome" amount={higlightData.outcome.amount}lastTransaction={higlightData.outcome.lastTransaction}/>
-						<HighLightCard type="total" title="Total" amount={higlightData.total.amount} lastTransaction={higlightData.total.lastTransaction}/>
-					</HighLightCards>
-
-					<Transactions>
-						<Title>Transactions</Title>
-						{
-							transactions.length <= 0 ?
-							<NoTransaction>
-								<LottieView 
-									source={NoTransactionLottie}
-									style={{
-										width: 100,
-										height: 100,																	
-									}}
-									autoPlay
-									loop
-									resizeMode='contain'
+						<Transactions>
+							<Title>Transactions</Title>
+							{
+								transactions.length <= 0 ?
+								<NoTransaction>
+									<LottieView 
+										source={NoTransactionLottie}
+										style={{
+											width: 100,
+											height: 100,																	
+										}}
+										autoPlay
+										loop
+										resizeMode='contain'
+									/>
+								</NoTransaction>
+								:
+								<TransactionsList
+									data={transactions}						
+									keyExtractor={item => item.id}
+									renderItem={({ item }) => <TransactionCard  data={item}/>}
 								/>
-							</NoTransaction>
-							:
-							<TransactionsList
-								data={transactions}						
-								keyExtractor={item => item.id}
-								renderItem={({ item }) => <TransactionCard  data={item}/>}
-							/>
-						}
-					</Transactions>
-				</>
-			}
-    </Container>
+							}
+						</Transactions>
+					</>
+				}
+			</Container>
+		</Animated.View>
 	);
 }

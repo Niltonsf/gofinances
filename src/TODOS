@@ -1,4 +1,0 @@
-[ x ] - FIX transaction list when there is only one transaction
-[  ] - Add a 'R$' for register screen in price field
-[ x ] - Include 'No transactions' to flat list
-[ x ] - Create context for passing user data
