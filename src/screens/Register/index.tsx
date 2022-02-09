@@ -16,14 +16,11 @@ import { InputForm } from '../../components/Form/InputForm';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import uuid from 'react-native-uuid';
 import { useNavigation } from '@react-navigation/native'
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
-
-import { InputPrice } from '../../components/Form/InputPrice';
-import CurrencyInput from 'react-native-currency-input';
+import Animated from 'react-native-reanimated';
 
 interface FormProps {
 	name: string;
@@ -35,8 +32,7 @@ const schema = Yup.object().shape({
 	amount: Yup.number().typeError('Insert numeric value').positive('Only positive values.').required('Amount is required.')
 });
 
-export function Register() {
-
+export function Register({ drawerAnimationStyle }: any) {
 	const currentUser = auth().currentUser;
 
 	const navigation = useNavigation();
@@ -88,7 +84,7 @@ export function Register() {
 				}
 			);
 			reset();
-			navigation.navigate('Listing' as any);
+			navigation.navigate('Dashboard' as any);
 		} catch (e) {
 			console.log(e);
 			Alert.alert("Something went wrong on saving!");
@@ -96,6 +92,7 @@ export function Register() {
 	}
 
 	return (
+		<Animated.View style={{ flex: 1, ...drawerAnimationStyle}}>
 		<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 			<Container>
 				<Header>
@@ -127,5 +124,6 @@ export function Register() {
 				</Modal>
 			</Container>
 		</TouchableWithoutFeedback>
+		</Animated.View>
 	);
 }

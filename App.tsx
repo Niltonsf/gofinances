@@ -10,14 +10,16 @@ import {
 import AppLoading from 'expo-app-loading';
 import theme from './src/global/styles/theme';
 import { NavigationContainer } from '@react-navigation/native';
-import { AppRoutes } from './src/routes/app.routes';
 import 'intl';
 import 'intl/locale-data/jsonp/pt-BR';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { AuthProvider } from './src/hooks/auth';
 import { AuthRoutes } from './src/routes/auth.routes';
+import { CustomDrawer } from './src/components/CustomDrawer';
+import { DrawerRoutes } from './src/routes/drawer.routes';
 
 export default function App() {
+	console.disableYellowBox = true; // REMOVE
 
 	const [ fontsLoaded ] = useFonts({
 		Poppins_400Regular,
@@ -37,18 +39,16 @@ export default function App() {
 
   return (
 		<ThemeProvider theme={theme}>
-			<StatusBar style="light"/>
+			<StatusBar style="light"/>		
 			<NavigationContainer>
-
 				{ user ? 
 					<AuthProvider>
-						<AppRoutes />
-					</AuthProvider> 
+						<DrawerRoutes /> 
+					</AuthProvider>
 					:
 					<AuthRoutes />
-				}
-			
-			</NavigationContainer>						
+				}				
+			</NavigationContainer>	
 		</ThemeProvider>
   );
 }

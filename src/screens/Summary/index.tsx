@@ -18,11 +18,11 @@ import { categories } from '../../utils/categories';
 import { VictoryPie } from 'victory-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { useTheme } from 'styled-components';
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { addMonths, subMonths, format } from 'date-fns';
 import { useFocusEffect } from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
 import { useAuth } from '../../hooks/auth';
+import Animated from 'react-native-reanimated';
 
 interface TransactionData {
 	type: 'positive' | 'negative';
@@ -42,7 +42,7 @@ interface CategoryData {
 }
 
 
-export function Summary(){
+export function Summary({ drawerAnimationStyle }: any){
 	const { uid } = useAuth();
 	const [isLoading, setIsLoading] = useState(false);
 	const [selectedDate, setSelectedDate] = useState(new Date());
@@ -125,68 +125,70 @@ export function Summary(){
 	}, [selectedDate]))
 
 	return (
-		<Container>
-			<Header>
-				<Title>Summary by category</Title>
-			</Header>
-			{
-				isLoading ? 
-					<LoadingContainer>
-						<ActivityIndicator color={theme.colors.orange} size='large'/>
-					</LoadingContainer> 
-					
-					:
-					
-					<Content
-						contentContainerStyle= {{ 
-							paddingHorizontal: 24,
-							paddingBottom: useBottomTabBarHeight() 
-						}}
-						showsVerticalScrollIndicator={false}
-					>
-						<MonthSelect>
-							<MonthSelectButton onPress={() => handleChangeDate('prev')}>
-								<MonthSelectIcon name="chevron-left"/>
-							</MonthSelectButton>
-
-							<Month>
-								{ format(selectedDate, 'MMMM, yyyy') }
-							</Month>
-
-							<MonthSelectButton onPress={() => handleChangeDate('next')}>
-								<MonthSelectIcon name="chevron-right"/>
-							</MonthSelectButton>
-						</MonthSelect>
-
-						<ChartContainer>
-							<VictoryPie 
-								data={totalByCategories}
-								colorScale={totalByCategories.map(category => category.color)}
-								style={{
-									labels: { 
-										fontSize: RFValue(18),
-										fontWeight: 'bold',
-										fill: theme.colors.shapeColor
-									}
-								}}
-								labelRadius={50}
-								x="percent"
-								y="total"
-							/>
-						</ChartContainer>
+		<Animated.View style={{ flex: 1, ...drawerAnimationStyle}}>
+			<Container>
+				<Header>
+					<Title>Summary by category</Title>
+				</Header>
+				{
+					isLoading ? 
+						<LoadingContainer>
+							<ActivityIndicator color={theme.colors.orange} size='large'/>
+						</LoadingContainer> 
 						
-						{
-							totalByCategories.map(item => (
-								<HistoryCard
-									key={item.key}
-									title={item.name} 
-									amount={item.totalFormatted} 
-									color={item.color}
+						:
+						
+						<Content
+							contentContainerStyle= {{ 
+								paddingHorizontal: 24,
+								paddingBottom: 40
+							}}
+							showsVerticalScrollIndicator={false}
+						>
+							<MonthSelect>
+								<MonthSelectButton onPress={() => handleChangeDate('prev')}>
+									<MonthSelectIcon name="chevron-left"/>
+								</MonthSelectButton>
+
+								<Month>
+									{ format(selectedDate, 'MMMM, yyyy') }
+								</Month>
+
+								<MonthSelectButton onPress={() => handleChangeDate('next')}>
+									<MonthSelectIcon name="chevron-right"/>
+								</MonthSelectButton>
+							</MonthSelect>
+
+							<ChartContainer>
+								<VictoryPie 
+									data={totalByCategories}
+									colorScale={totalByCategories.map(category => category.color)}
+									style={{
+										labels: { 
+											fontSize: RFValue(18),
+											fontWeight: 'bold',
+											fill: theme.colors.shapeColor
+										}
+									}}
+									labelRadius={50}
+									x="percent"
+									y="total"
 								/>
-							))
-						}
-					</Content>
-			}
-		</Container>
+							</ChartContainer>
+							
+							{
+								totalByCategories.map(item => (
+									<HistoryCard
+										key={item.key}
+										title={item.name} 
+										amount={item.totalFormatted} 
+										color={item.color}
+									/>
+								))
+							}
+						</Content>
+				}
+			</Container>
+		</Animated.View>
 	);
 }
