@@ -15,12 +15,20 @@ import 'intl/locale-data/jsonp/pt-BR';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { AuthProvider } from './src/hooks/auth';
 import { AuthRoutes } from './src/routes/auth.routes';
-import { CustomDrawer } from './src/components/CustomDrawer';
 import { DrawerRoutes } from './src/routes/drawer.routes';
 
-export default function App() {
-	console.disableYellowBox = true; // REMOVE
+//REDUX
+import { createStore, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux';
+import thunk from 'redux-thunk';
+import rootReducer from './src/stores/rootReducer';
 
+const store = createStore(
+	rootReducer,
+	applyMiddleware(thunk)
+);
+
+export default function App() {
 	const [ fontsLoaded ] = useFonts({
 		Poppins_400Regular,
 		Poppins_500Medium,
@@ -40,15 +48,17 @@ export default function App() {
   return (
 		<ThemeProvider theme={theme}>
 			<StatusBar style="light"/>		
-			<NavigationContainer>
-				{ user ? 
-					<AuthProvider>
-						<DrawerRoutes /> 
-					</AuthProvider>
-					:
-					<AuthRoutes />
-				}				
-			</NavigationContainer>	
+			<Provider store={store}>
+				<NavigationContainer>
+					{ user ? 
+						<AuthProvider>
+							<DrawerRoutes /> 
+						</AuthProvider>
+						:
+						<AuthRoutes />
+					}				
+				</NavigationContainer>	
+			</Provider>
 		</ThemeProvider>
   );
 }

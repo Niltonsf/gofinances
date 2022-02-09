@@ -7,16 +7,25 @@ import {
 	IconContainer,
 	UsernameContainer,
 	Gretting,
-	DrawerItems
+	DrawerItems,
+	LogOutButton,
+	LogOutIcon,
+	LogOutText
 } from './styles';
 import { DrawerContentScrollView } from '@react-navigation/drawer'; 
 import { Image, TouchableOpacity } from 'react-native';
 import { CustomDrawerItem } from '../CustomDrawerItem';
+import auth from '@react-native-firebase/auth';
 
-export function CustomDrawerContent({ navigation }: any){
+
+export function CustomDrawerContent({ navigation, selectedTab, setSelectedTab }: any){
+	function logOut() {
+		auth().signOut();
+	}
+
 	return (
 		<DrawerContentScrollView
-			scrollEnabled={true}
+			scrollEnabled={false}
 			contentContainerStyle={{ flex: 1}}
 		>
 			<Container>
@@ -40,12 +49,30 @@ export function CustomDrawerContent({ navigation }: any){
 				</ProfileContainer>
 
 				<DrawerItems>
-						<CustomDrawerItem label="Dashboard" icon="person" onPress={() => navigation.navigate("Dashboard")}/>
-						<CustomDrawerItem label="Register" icon="book" onPress={() => navigation.navigate("Register")}/>
-						<CustomDrawerItem label="Summary" icon="pie-chart" onPress={() => navigation.navigate("Summary")}/>
+						<CustomDrawerItem label="Dashboard" icon="person" isSelected={selectedTab === 'Dashboard'}
+							onPress={() => {
+								setSelectedTab("Dashboard");
+								navigation.navigate("Dashboard");
+							}} 
+						/>
+						<CustomDrawerItem label="Register" icon="book" isSelected={selectedTab === 'Register'}
+							onPress={() => {
+								setSelectedTab("Register");
+								navigation.navigate("Register");
+							}}  
+						/>
+						<CustomDrawerItem label="Summary" icon="pie-chart" isSelected={selectedTab === 'Summary'}
+							onPress={() => {
+								setSelectedTab("Summary");
+								navigation.navigate("Summary");
+							}} 
+						/>
 				</DrawerItems>
 
-				<CustomDrawerItem label="Logout" icon="logout" onPress={() => {}}/>
+				<LogOutButton onPress={logOut}>
+					<LogOutIcon name="logout" />
+					<LogOutText>Logout</LogOutText>
+				</LogOutButton>
 			</Container>
 		</DrawerContentScrollView>
 	);

@@ -43,3 +43,30 @@ export const DrawerItems = styled.View`
 	flex: 1;
 	margin-top: ${RFValue(30)}px;
 `;
+
+export const LogOutButton = styled.TouchableOpacity`
+	height: ${RFValue(40)}px;
+	margin-bottom: ${RFValue(13)}px;
+	flex-direction: row;
+	align-items: center;
+	padding-horizontal: ${RFValue(15)}px;
+`;
+
+export const LogOutIcon = styled(MaterialIcons)`
+	color: ${({ theme }) => theme.colors.text_dark };
+	font-size: ${RFValue(16)}px;
+	margin-right: ${RFValue(15)}px;
+`;
+
+export const LogOutText = styled.Text`
+	color: ${({ theme }) => theme.colors.text_dark };
+	font-size: ${RFValue(16)}px;
+`;
+
+/*flex-direction: row;
+	height: ${RFValue(40)}px;
+	margin-bottom: ${RFValue(13)}px;
+	padding-horizontal: ${RFValue(15)}px;
+	align-items: center;
+	border-radius: ${RFValue(5)}px;
+	background-color: 'rbga(0,0,0,0)'; */

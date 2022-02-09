@@ -1,23 +1,22 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Register } from '../screens/Register';
-import { CustomDrawer } from '../components/CustomDrawer';
+import CustomDrawer from '../components/CustomDrawer';
 
-const Stack = createStackNavigator();
+const { Navigator, Screen } = createStackNavigator();
 
 export function DrawerRoutes(){
 	return (
-		<Stack.Navigator
+		<Navigator
 			screenOptions={{
-				headerShown: false
-			}}
-			initialRouteName={'Home'}
+				headerShown: false,				
+			}}			
+			initialRouteName={'Drawer'}
 		>
-			<Stack.Screen 
-				name="Home"
+			<Screen 
+				name="Drawer"
 				component={CustomDrawer}
 			/>
-
-		</Stack.Navigator>
+			
+		</Navigator>
 	);
 }

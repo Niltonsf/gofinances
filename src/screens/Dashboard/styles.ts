@@ -56,13 +56,6 @@ export const UserName = styled.Text`
 	font-family: ${({ theme }) => theme.fonts.bold};
 `;
 
-export const LogoutButton = styled(BorderlessButton)``;
-
-export const Icon = styled(Feather)`
-	color: ${({ theme }) => theme.colors.orange};
-	font-size: ${RFValue(24)}px;
-`;
-
 export const HighLightCards = styled.ScrollView.attrs({
 	horizontal: true,
 	showsHorizontalScrollIndicator: false,

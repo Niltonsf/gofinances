@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container } from './styles';
 import { createDrawerNavigator } from '@react-navigation/drawer'; 
 import { Register } from '../../screens/Register';
@@ -6,10 +6,17 @@ import { CustomDrawerContent } from '../CustomDrawerContent';
 import Animated from 'react-native-reanimated';
 import { Dashboard } from '../../screens/Dashboard';
 import { Summary } from '../../screens/Summary';
+//REDUX
+import { connect } from 'react-redux';
+import { setSelectedTab } from '../../stores/tab/tabActions';
 
 const Drawer = createDrawerNavigator();
 
-export function CustomDrawer({ selectedTab, setSelectedTab }: any){
+function CustomDrawer({ selectedTab, setSelectedTab }: any){
+
+	function setDefaultOnlyOnce() {
+		setSelectedTab('Dashboard');
+	}
 
 	const [progress, setProgress] = useState(new Animated.Value(0));
 
@@ -23,7 +30,11 @@ export function CustomDrawer({ selectedTab, setSelectedTab }: any){
 		outputRange: [0, 26]
 	});
 
-	const animatedStyle = { borderRadius, transform: [{ scale }] };
+	const animatedStyle = { borderRadius, transform: [{ scale }], overflow: 'hidden' };
+
+	useEffect(() => {
+		setDefaultOnlyOnce();
+	}, [])
 
 	return (
 		<Container>
@@ -40,12 +51,12 @@ export function CustomDrawer({ selectedTab, setSelectedTab }: any){
 				drawerContent={props => {
 					setTimeout(() => {
 						setProgress(props.progress as any);
-					}, 0);
+					}, 0);					
 
 					return <CustomDrawerContent
 						navigation={props.navigation}
 						selectedTab={selectedTab}
-						setSelectedTab={setSelectedTab}
+						setSelectedTab={setSelectedTab}				
 					/>
 				}}
 			>
@@ -65,3 +76,17 @@ export function CustomDrawer({ selectedTab, setSelectedTab }: any){
 		</Container>
 	);
 }
+
+function mapStateToProps(state: any) {
+	return {
+		selectedTab: state.tabReducer.selectedTab
+	}
+}
+
+function mapDispatchToProps(dispatch: any) {
+	return {
+		setSelectedTab: (selectedTab: any) => { return dispatch(setSelectedTab(selectedTab)) }
+	}
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CustomDrawer);

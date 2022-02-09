@@ -8,12 +8,10 @@ import {
 	UserGreeting,
 	UserName,
 	UserWrapper,
-	Icon,
 	HighLightCards,
 	Transactions,
 	Title,
 	TransactionsList,
-	LogoutButton,
 	LoadingContainer,
 	NoTransaction
 } from './styles';
@@ -23,7 +21,6 @@ import { useFocusEffect } from '@react-navigation/native';
 import { useAuth } from '../../hooks/auth';
 import { ActivityIndicator } from 'react-native';
 import { useTheme } from 'styled-components'
-import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import LottieView from 'lottie-react-native';
 import NoTransactionLottie from '../../assets/no_transactions.json';
@@ -50,10 +47,6 @@ export function Dashboard({ drawerAnimationStyle }: any) {
 	const [transactions, setTransactions] = useState<DataListProps[]>([]);
 	const [higlightData, setHighlightData] = useState<HighlightDataProps>({} as HighlightDataProps);
 	const theme = useTheme();
-
-	function logOut() {
-		auth().signOut();
-	}
 
 	function getLastTransactionDate(collection: DataListProps[], type: 'positive' | 'negative') {
 		const lastTransaction = new Date(
@@ -187,10 +180,6 @@ export function Dashboard({ drawerAnimationStyle }: any) {
 										<UserName>{userSettings.name}</UserName>
 									</User>
 								</UserInfo>
-
-								<LogoutButton onPress={logOut}>
-									<Icon name="power"/>
-								</LogoutButton>
 							</UserWrapper>
 						</Header>
 
