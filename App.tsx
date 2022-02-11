@@ -22,7 +22,6 @@ import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import rootReducer from './src/stores/rootReducer';
-import LoadingCard from './src/components/LoadingCard';
 
 const store = createStore(
 	rootReducer,

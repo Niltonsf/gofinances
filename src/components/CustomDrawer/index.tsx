@@ -10,6 +10,7 @@ import { Summary } from '../../screens/Summary';
 import { connect } from 'react-redux';
 import { setSelectedTab } from '../../stores/tab/tabActions';
 import { Settings } from '../../screens/Settings';
+import { StatusBar } from 'expo-status-bar';
 
 const Drawer = createDrawerNavigator();
 
@@ -50,7 +51,7 @@ function CustomDrawer({ selectedTab, setSelectedTab }: any){
 				}}
 				initialRouteName="Dashboard"
 				drawerContent={props => {
-					setTimeout(() => {
+					setTimeout(() => {						
 						setProgress(props.progress as any);
 					}, 0);					
 
@@ -76,7 +77,6 @@ function CustomDrawer({ selectedTab, setSelectedTab }: any){
 				<Drawer.Screen name="Settings">
 					{props => <Settings drawerAnimationStyle={animatedStyle}/>}
 				</Drawer.Screen>
-
 			</Drawer.Navigator>
 		</Container>
 	);
