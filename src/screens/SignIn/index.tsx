@@ -9,21 +9,20 @@ import {
 	Fields,
 	Spacing,
 	ForgotPassContainer,
-	ForgotText
+	ForgotText,
+	Button,
+	ButtonTitle
 } from './styles';
 import { Alert } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useTheme } from 'styled-components';
 // FORM
 import { InputForm } from '../../components/Form/InputForm';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
-import { Button } from '../../components/Form/Button';
 import auth from '@react-native-firebase/auth';
 import LottieView from 'lottie-react-native';
-import LogoImage from '../../assets/lottieLogo.json';
-import { Divider } from '../../components/Divider';
+import SignInLottie from '../../assets/signInLottie.json';
 import DismissKeyboard from '../../components/DismissKeyboard';
 import LoadingCard from '../../components/LoadingCard';
 
@@ -61,21 +60,14 @@ export function SignIn({ navigation }: any){
 			<LoadingCard />
 			:
 			<DismissKeyboard>
-			<Container>
-				<LinearGradient
-					colors={[`${theme.colors.shapeColor}`, `${theme.colors.blue}`]}
-					locations={[0.8, 0.1]}
-					style={{
-						flex:1, 
-					}}
-				>
+			<Container>				
 					<Header>
 						<TitleWrapper>					
 							<LottieView 
-							source={LogoImage} 
+							source={SignInLottie} 
 							style={{
-								width: 150,
-								height: 150,																	
+								width: 180,
+								height: 180,																	
 							}}
 							autoPlay
 							loop
@@ -89,17 +81,16 @@ export function SignIn({ navigation }: any){
 
 					<Footer>
 						<Form>
-							<Fields>
-								<Spacing>
-									<InputForm 
-										placeholder="Email" 
-										name="email" 
-										keyboardType="email-address" 
-										control={control} 
-										autoCapitalize='none'
-										error={errors.email && errors.email.message}								
-									/>
-								</Spacing>
+							<Fields>							
+								<InputForm 
+									placeholder="Email" 
+									name="email" 
+									keyboardType="email-address" 
+									control={control} 
+									autoCapitalize='none'
+									error={errors.email && errors.email.message}								
+								/>		
+								<Spacing height={15} />					
 								<InputForm 
 									placeholder="Password" 
 									name="password" 
@@ -110,22 +101,27 @@ export function SignIn({ navigation }: any){
 								/>
 							</Fields>
 
-							<ForgotPassContainer>
-								<ForgotText>Forgot password?</ForgotText>
-							</ForgotPassContainer>
+							<Spacing height={15}/>
 
-							<Spacing>
-								<Button title="Login" onPress={handleSubmit(handleLogin as any)}/>
-							</Spacing>		
+							<Button onPress={handleSubmit(handleLogin as any)}>
+								<ButtonTitle>SIGN IN</ButtonTitle>
+							</Button>
 
-							<Divider text='OR' />
+							<Spacing height={15}/>
+							
+							<Button onPress={() => navigation.navigate('SignUp')}>
+								<ButtonTitle>SIGN UP</ButtonTitle>
+							</Button>
 
-							<Button title="SignUp" onPress={() => navigation.navigate('SignUp')}/>
 						</Form>
 
-					</Footer>
+						<Spacing height={15}/>
 
-				</LinearGradient>
+						<ForgotPassContainer>
+							<ForgotText>Forgot password?</ForgotText>
+						</ForgotPassContainer>
+
+					</Footer>
 			</Container>
 		</DismissKeyboard>
 		}

@@ -3,12 +3,16 @@ import {
 	Container,
 	Header,
 	Footer,
-	Form
+	Form,
+	Spacing,
+	ReturnToLoginContainer,
+	NormalText,
+	ReturnOpcaity,
+	LoginInTitle
 } from './styles';
 import DismissKeyboard from '../../components/DismissKeyboard';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useTheme } from 'styled-components';
-import RocketLogo from '../../assets/rocket.json';
+import signUpLottie from '../../assets/signUpLottie.json';
 import LottieView from 'lottie-react-native';
 import { InputForm } from '../../components/Form/InputForm';
 import { useForm } from 'react-hook-form';
@@ -72,69 +76,66 @@ export function SignUp({ navigation }: any) {
 			:
 			<DismissKeyboard>
 				<Container>
-					<LinearGradient
-						colors={[`${theme.colors.shapeColor}`, `${theme.colors.blue}`]}
-						locations={[0.8, 0.1]}
-						style={{
-							flex:1, 
-						}}
-					>
-						<Header>
-							<LottieView 
-								source={RocketLogo} 
-								style={{
-									width: 150,
-									height: 150,																	
-								}}
-								autoPlay
-								loop
-								resizeMode='contain'
-							/>
-						</Header>
+					<Header>
+						<LottieView 
+							source={signUpLottie} 
+							style={{
+								width: 130,
+								height: 130,																	
+							}}
+							autoPlay
+							loop
+							resizeMode='contain'
+						/>
+					</Header>
 
-						<Footer>
-								<Form>
-									<InputForm 
-										placeholder={errors.firstName && errors.firstName.message ? errors.firstName.message : 'Name'}
-										name="firstName" 								
-										control={control} 
-										error={errors.firstName && errors.firstName.message}								
-									/>
-									<InputForm 
-										placeholder="Email" 
-										name="email" 
-										keyboardType="email-address" 
-										autoCapitalize='none'
-										control={control} 
-										error={errors.email && errors.email.message}
-										style={{ marginTop: 15 }}
-									/>
-									<InputForm 
-										placeholder="Password" 
-										name="password" 									 
-										control={control} 
-										autoCapitalize='none'
-										secureTextEntry={true} 
-										error={errors.password && errors.password.message}
-										style={{ marginTop: 15 }}
-									/>
-									<InputForm 
-										placeholder="Confirm password" 
-										name="passwordConfirm" 				
-										secureTextEntry={true} 
-										autoCapitalize='none'		
-										control={control} 
-										error={errors.passwordConfirm && errors.passwordConfirm.message}
-										style={{ marginTop: 15 }}
-									/>
+					<Footer>
+							<Form>
+								<InputForm 
+									placeholder={errors.firstName && errors.firstName.message ? errors.firstName.message : 'Name'}
+									name="firstName" 								
+									control={control} 
+									error={errors.firstName && errors.firstName.message}								
+								/>
+								<Spacing height={20} />
+								<InputForm 
+									placeholder="Email" 
+									name="email" 
+									keyboardType="email-address" 
+									autoCapitalize='none'
+									control={control} 
+									error={errors.email && errors.email.message}
+								/>
+								<Spacing height={20} />
+								<InputForm 
+									placeholder="Password" 
+									name="password" 									 
+									control={control} 
+									autoCapitalize='none'
+									secureTextEntry={true} 
+									error={errors.password && errors.password.message}
+								/>
+								<Spacing height={20} />
+								<InputForm 
+									placeholder="Confirm password" 
+									name="passwordConfirm" 				
+									secureTextEntry={true} 
+									autoCapitalize='none'		
+									control={control} 
+									error={errors.passwordConfirm && errors.passwordConfirm.message}									
+								/>
+								<Spacing height={20} />
 
-									<Button title="SignUp" onPress={handleSubmit(handleRegister as any)} style={{ marginTop: 15 }}/>
-									<Divider text="OR"/>
-									<Button title="Login" onPress={() => navigation.navigate('SignIn')}/>
-								</Form>
-						</Footer>
+								<Button title="SIGN UP" onPress={handleSubmit(handleRegister as any)} />															
 
-					</LinearGradient>		
+								<ReturnToLoginContainer>
+									<NormalText>Back to </NormalText>
+									<ReturnOpcaity onPress={() => navigation.navigate('SignIn')}>
+										<LoginInTitle>sign in.</LoginInTitle>
+									</ReturnOpcaity>
+								</ReturnToLoginContainer>
+							</Form>
+					</Footer>				
 				</Container>
 			</DismissKeyboard>
 		}

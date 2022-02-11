@@ -9,9 +9,9 @@ export default {
 		red_attention: 'rgba(232, 63, 91, 0.5)',
 		shapeColor: '#FFFFFF',
 		titles: '#363F5F',
-		texts: '#969CB3',
+		texts: '#8F8E8E',
 		background: '#F0F2F5',
-		text_dark: '#000000'
+		text_dark: '#1E1926'
 	},
 
 	fonts: {

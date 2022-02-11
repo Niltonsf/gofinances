@@ -25,7 +25,7 @@ export function InputForm({ control, name, error, ...rest }: Props){
 						{...rest}
 					/>
 					:
-					<Input						
+					<Input											
 						onChangeText={onChange}
 						value={value}	
 						error={error!}

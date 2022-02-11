@@ -1,12 +1,11 @@
 import styled from 'styled-components/native';
-import { RectButton } from 'react-native-gesture-handler';
 import { RFValue } from 'react-native-responsive-fontsize';
 
-export const Container = styled(RectButton)`
+export const Container = styled.TouchableOpacity`
 	width: 100%;
-	background-color: ${({ theme }) => theme.colors.orange};
-	border-radius: 5px;
-	padding: 18px;
+	height: ${RFValue(50)}px;
+	background-color: ${({ theme }) => theme.colors.blue};
+	border-radius: 10px;
 	align-items: center;
 	justify-content: center;
 `;
