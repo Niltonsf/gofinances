@@ -133,11 +133,9 @@ export function Summary({ drawerAnimationStyle }: any){
 				{
 					isLoading ? 
 						<LoadingContainer>
-							<ActivityIndicator color={theme.colors.orange} size='large'/>
+							<ActivityIndicator color={theme.colors.blue} size='large'/>
 						</LoadingContainer> 
-						
-						:
-						
+						:						
 						<Content
 							contentContainerStyle= {{ 
 								paddingHorizontal: 24,

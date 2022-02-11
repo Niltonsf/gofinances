@@ -65,7 +65,7 @@ function CustomDrawer({ selectedTab, setSelectedTab }: any){
 				</Drawer.Screen>
 
 				<Drawer.Screen name="Register">
-					{props => <Register drawerAnimationStyle={animatedStyle}/>}
+					{props => <Register drawerAnimationStyle={animatedStyle} setSelectedTab={setSelectedTab}/>}
 				</Drawer.Screen>
 
 				<Drawer.Screen name="Summary">

@@ -32,7 +32,7 @@ const schema = Yup.object().shape({
 	amount: Yup.number().typeError('Insert numeric value').positive('Only positive values.').required('Amount is required.')
 });
 
-export function Register({ drawerAnimationStyle }: any) {
+export function Register({ drawerAnimationStyle, setSelectedTab }: any) {
 	const currentUser = auth().currentUser;
 
 	const navigation = useNavigation();
@@ -84,6 +84,7 @@ export function Register({ drawerAnimationStyle }: any) {
 				}
 			);
 			reset();
+			setSelectedTab("Dashboard");
 			navigation.navigate('Dashboard' as any);
 		} catch (e) {
 			console.log(e);
