@@ -6,8 +6,14 @@ interface TransactionProps {
 	type: 'positive' | 'negative';
 }
 
-export const Container = styled.View`
-	background-color: ${({ theme }) => theme.colors.shapeColor};
+export const Container = styled.View.attrs({
+	shadowOffset: { width: 1, height: 3 }
+})`
+	shadow-color: #000;
+	elevation: 2;
+  shadow-opacity: 0.2;
+  shadow-radius: 5px;
+	background-color: ${({ theme }) => theme.colors.background};
 	border-radius: 5px;
 	padding: 17px 24px;
 	margin-bottom: 16px;
@@ -43,17 +49,17 @@ export const Category = styled.View`
 `;
 
 export const Icon = styled(FontAwesome5)`
-	font-size: ${RFValue(20)}px;
+	font-size: ${RFValue(15)}px;
 	color: ${({ theme }) => theme.colors.texts};
 `;
 
 export const CategoryName = styled.Text`
-	font-size: ${RFValue(14)}px;
+	font-size: ${RFValue(13)}px;
 	color: ${({ theme }) => theme.colors.texts};
-	margin-left: 17px;
+	margin-left: 10px;
 `;
 
 export const Date = styled.Text`
-	font-size: ${RFValue(14)}px;
+	font-size: ${RFValue(13)}px;
 	color: ${({ theme }) => theme.colors.texts};
 `;

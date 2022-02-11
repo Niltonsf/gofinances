@@ -42,8 +42,8 @@ export const HighLightCards = styled.ScrollView.attrs({
 
 export const Transactions = styled.View`
 	flex: 1;
-	padding: 0 24px;
-	margin-top: ${RFPercentage(12)}px;
+	padding: 0 25px;
+	margin-top: ${RFPercentage(5)}px;
 `;
 
 export const Title = styled.Text`
@@ -59,7 +59,9 @@ export const TransactionsList = styled(
 	contentContainerStyle: {
 		paddingBottom: getBottomSpace(),
 	},
-})`
+})`	
+	padding-top: ${RFValue(5)}px;
+	padding-horizontal: ${RFValue(2)}px;
 `;
 
 export const LoadingContainer = styled.View`

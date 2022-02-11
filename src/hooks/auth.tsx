@@ -12,8 +12,7 @@ interface UserSettingsProps {
 	photo: string;
 }
 
-interface FirebaseFunctionsProps {
-	getFirebaseData(): void;
+interface FirebaseFunctionsProps {	
 	handleAddNewTransaction(data: NewTransactionProps): void;
 	handleAllTransactions(): any;
 }

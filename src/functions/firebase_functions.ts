@@ -16,12 +16,7 @@ class FirebaseFunctions {
 	constructor(uid: string | undefined) {
 		this.uid = uid;
 	}
-
-	public getFirebaseData(): any {
-		if(this.uid === undefined) return;
-		console.log(this.uid);
-	}
-
+	
 	 public async handleAddNewTransaction(newTransaction: NewTransactionProps) {
 		if(this.uid === undefined) return;		
 		try {
