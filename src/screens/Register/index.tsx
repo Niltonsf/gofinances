@@ -21,6 +21,7 @@ import { useNavigation } from '@react-navigation/native'
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import Animated from 'react-native-reanimated';
+import { useAuth } from '../../hooks/auth';
 
 interface FormProps {
 	name: string;
@@ -33,7 +34,7 @@ const schema = Yup.object().shape({
 });
 
 export function Register({ drawerAnimationStyle, setSelectedTab }: any) {
-	const currentUser = auth().currentUser;
+	const { uid, firebaseFunctions } = useAuth();
 
 	const navigation = useNavigation();
 	
@@ -73,7 +74,7 @@ export function Register({ drawerAnimationStyle, setSelectedTab }: any) {
 		}
 
 		try {
-			firestore().collection(currentUser!.uid).add(newTransaction);
+			firebaseFunctions.handleAddNewTransaction(newTransaction);			
 
 			// RESETING FIELDS
 			setTransactionType('');

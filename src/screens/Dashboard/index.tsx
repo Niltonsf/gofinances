@@ -17,7 +17,6 @@ import { useFocusEffect } from '@react-navigation/native';
 import { useAuth } from '../../hooks/auth';
 import { ActivityIndicator } from 'react-native';
 import { useTheme } from 'styled-components'
-import firestore from '@react-native-firebase/firestore';
 import LottieView from 'lottie-react-native';
 import NoTransactionLottie from '../../assets/no_transactions.json';
 import Animated from 'react-native-reanimated';
@@ -39,7 +38,7 @@ interface HighlightDataProps {
 
 export function Dashboard({ drawerAnimationStyle }: any) {
 	const navigation = useNavigation();
-	const { uid } = useAuth();
+	const { firebaseFunctions } = useAuth();
 
 	const [isLoading, setIsLoading] = useState(true);
 	const [transactions, setTransactions] = useState<DataListProps[]>([]);
@@ -61,6 +60,16 @@ export function Dashboard({ drawerAnimationStyle }: any) {
 		return `${day} of ${month}`
 	}
 
+	function lastTotalTransationDate(lastTransactionEntries: string, lastTransactionOutcome: string): string {
+		if (lastTransactionEntries !== 'NaN of Invalid Date') {
+			return `from 01 to ${lastTransactionEntries}`;
+		} else if (lastTransactionOutcome !== 'NaN of Invalid Date') {
+			return `from 01 to ${lastTransactionOutcome}`;
+		} else {
+			return 'No transactions';
+		}
+	}
+
 	async function loadTransaction() {
 		let entriesSum = 0;
 		let outcomeSum = 0;
@@ -68,21 +77,9 @@ export function Dashboard({ drawerAnimationStyle }: any) {
 
 		const currentMonth = new Date().getMonth();
 		const currentYear = new Date().getFullYear();
-		const transactions: DataListProps[] = [];
 
-		await firestore()
-		.collection(uid!)
-		.orderBy('date')
-		.get().then(querySnapshot => {
-			querySnapshot.forEach(documentsSnapshot => {
-				const documentData = documentsSnapshot.data();
-				const newDocument: any = {
-					...documentData,
-					date: documentData.date.toDate()
-				}
-				transactions.unshift(newDocument);
-			});
-		});
+		const transactions: DataListProps[] = 
+		await firebaseFunctions.handleAllTransactions();		
 
 		// Filtering current month transacations
 		const filteredTransactions = transactions.filter((item: DataListProps) => {
@@ -122,7 +119,7 @@ export function Dashboard({ drawerAnimationStyle }: any) {
 
 		const lastTransactionEntries = getLastTransactionDate(filteredTransactions, 'positive');
 		const lastTransactionOutcome = getLastTransactionDate(filteredTransactions, 'negative');
-		const totalInterval = lastTransactionEntries === 'NaN of Invalid Date' ? 'No transactions' : `from 01 to ${lastTransactionEntries}`;
+		const totalInterval = lastTotalTransationDate(lastTransactionEntries, lastTransactionOutcome);
 
 		setHighlightData({
 			entries: {
@@ -151,7 +148,7 @@ export function Dashboard({ drawerAnimationStyle }: any) {
 		setIsLoading(false);
 	}
 
-	useEffect(() => {
+	useEffect(() => {		
 		loadTransaction();
 	}, []);
 

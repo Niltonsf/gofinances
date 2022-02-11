@@ -1,7 +1,8 @@
 import React, { createContext, useContext, ReactNode, useEffect, useState } from 'react';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-
+import FirebaseFunctions from '../functions/firebase_functions';
+import { NewTransactionProps } from '../functions/firebase_functions';
 interface AuthProviderProps {
 	children: ReactNode;
 }
@@ -11,9 +12,16 @@ interface UserSettingsProps {
 	photo: string;
 }
 
+interface FirebaseFunctionsProps {
+	getFirebaseData(): void;
+	handleAddNewTransaction(data: NewTransactionProps): void;
+	handleAllTransactions(): any;
+}
+
 interface AuthDataProps {
 	uid: string | undefined;
 	userSettings: UserSettingsProps;
+	firebaseFunctions: FirebaseFunctionsProps;
 }
 
 const AuthContext = createContext({} as AuthDataProps);
@@ -21,6 +29,7 @@ const AuthContext = createContext({} as AuthDataProps);
 function AuthProvider({ children }: AuthProviderProps) {
 	const [ userSettings, setUserSettings ] = useState({} as UserSettingsProps);
 	const uid = auth().currentUser?.uid;
+	const firebaseFunctions: FirebaseFunctionsProps = new FirebaseFunctions(uid);
 	
 	useEffect(() => {
 		async function handleUserSettings() {
@@ -39,7 +48,8 @@ function AuthProvider({ children }: AuthProviderProps) {
 		<AuthContext.Provider
 			value={{
 				uid,
-				userSettings
+				userSettings,
+				firebaseFunctions
 			}}
 		>
 			{ children }
