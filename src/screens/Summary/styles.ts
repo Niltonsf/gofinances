@@ -8,6 +8,17 @@ export const Container = styled.View`
 	background-color: ${({ theme }) => theme.colors.background};
 `;
 
+export const DrawerContainer = styled.TouchableOpacity`
+	width: 100%;
+	margin-left: ${RFValue(40)}px;
+`;
+
+export const Icon = styled(Feather)`
+	font-size: ${RFValue(25)}px;
+	color: ${({ theme }) => theme.colors.shapeColor};
+	margin-top: 10px;
+`;
+
 export const Header = styled.View`
 	background-color: ${({ theme }) => theme.colors.blue};
 	width: 100%;

@@ -13,10 +13,16 @@ interface IconProps {
 	type: 'up' | 'down';
 }
 
-export const Container = styled.View<ContainerProps>`
+export const Container = styled.View.attrs<ContainerProps>({
+	shadowOffset: { width: 1, height: 3 }
+})`
 	width: 48%;
-	border: 1.5px solid ${({ theme }) => theme.colors.texts};
-	border-radius: 5px;
+	border-radius: 10px;
+	elevation: 2;
+	background-color: ${({ theme }) => theme.colors.background}
+	shadow-color: #000;
+  shadow-opacity: 0.2;
+  shadow-radius: 4px;
 
 	${({ isActive, type }) => isActive && type === 'up' && css`
 		background-color: ${({ theme }) => theme.colors.green_attention}

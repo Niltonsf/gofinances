@@ -4,8 +4,9 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 export const Container = styled.View`
 	flex: 1;
-	padding-horizontal: ${RFValue(15)}px;
+	padding-horizontal: ${RFValue(25)}px;
 	margin-bottom: ${RFValue(30)}px;
+	margin-top: ${RFValue(30)}px;
 `;
 
 export const IconContainer = styled.View`
@@ -30,7 +31,7 @@ export const UsernameContainer = styled.View`
 
 export const Gretting = styled.Text`
 	font-size: ${RFValue(13)}px;
-	margin-bottom: ${RFValue(2)}px;
+	margin-bottom: ${RFValue(1)}px;
 	font-family: ${({ theme }) => theme.fonts.regular}
 `;
 
@@ -41,7 +42,7 @@ export const Username = styled.Text`
 
 export const DrawerItems = styled.View`
 	flex: 1;
-	margin-top: ${RFValue(30)}px;
+	margin-top: ${RFValue(80)}px;
 `;
 
 export const LogOutButton = styled.TouchableOpacity`

@@ -7,8 +7,8 @@ import {
 	Category,
 	Icon,
 	Name,
-	Separator,
-	Footer
+	Footer,
+	CategoryTouch
 } from './styles';
 import {categories} from '../../utils/categories';
 import { Button } from '../../components/Form/Button';
@@ -37,22 +37,28 @@ export function CategorySelect({
 	return (
 		<Container>
 			<Header>
-				<Title>Categoria</Title>
+				<Title>Catergory Select</Title>
 			</Header>
 
 			<FlatList 
 				data={categories}
-				style={{flex:1, width: '100%'}}
+				style={{					
+					flex:1, 
+					width: '100%',
+					paddingHorizontal: 15,
+					marginTop: 23
+				}}
 				numColumns={2}
 				keyExtractor={(item) => item.key}
 				renderItem={({ item }) => (
-					<Category 
-						onPress={() => handleCategorySelect(item)}
-						isActive={category.key === item.key}
-					>
-						<Icon name={item.icon} isActive={category.key === item.key} />
-						<Name isActive={category.key === item.key}>{item.name}</Name>
-					</Category>
+					<CategoryTouch onPress={() => handleCategorySelect(item)}>
+						<Category 							
+							isActive={category.key === item.key}
+						>
+							<Icon name={item.icon} isActive={category.key === item.key} />
+							<Name isActive={category.key === item.key}>{item.name}</Name>
+						</Category>
+					</CategoryTouch>
 				)}		
 			/>
 

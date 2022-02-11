@@ -9,7 +9,10 @@ import {
 	Title,
 	Form,
 	Fields,
-	TransactionTypes
+	TransactionTypes,
+	DrawerContainer,
+	Icon,
+	Spacing
 } from './styles';
 import { CategorySelect } from '../CategorySelect'; 
 import { InputForm } from '../../components/Form/InputForm';
@@ -34,7 +37,7 @@ const schema = Yup.object().shape({
 });
 
 export function Register({ drawerAnimationStyle, setSelectedTab }: any) {
-	const { uid, firebaseFunctions } = useAuth();
+	const { firebaseFunctions } = useAuth();
 
 	const navigation = useNavigation();
 	
@@ -95,37 +98,43 @@ export function Register({ drawerAnimationStyle, setSelectedTab }: any) {
 
 	return (
 		<Animated.View style={{ flex: 1, ...drawerAnimationStyle}}>
-		<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-			<Container>
-				<Header>
-					<Title>Register</Title>
-				</Header>
-				<Form>
-					<Fields>
-						<InputForm placeholder="Name" name="name" control={control} autoCapitalize="sentences" autoCorrect={false} error={errors.name && errors.name.message}/>
-						<InputForm placeholder="Price" name="amount" control={control} keyboardType="numeric" error={errors.amount && errors.amount.message} />												
-						<TransactionTypes>
-							<TransactionTypeButton type="up" title="Income" onPress={() => handleTransactionType('positive')}
-								isActive={transactionType === 'positive'}
-							/>
-							<TransactionTypeButton type="down" title="Outcome" onPress={() => handleTransactionType('negative')}
-								isActive={transactionType === 'negative'}
-							/>
-						</TransactionTypes>
-						<CategorySelectButton title={category.name} onPress={handleOpenSelectCategory}/>
-					</Fields>
-					<Button title="Send" onPress={handleSubmit(handleRegister as any)}/>
-				</Form>
+			<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+				<Container>
+					<Header>
+						<DrawerContainer onPress={() => navigation.openDrawer()}>
+							<Icon name="menu" />
+						</DrawerContainer>
+						<Title>Register</Title>
+					</Header>
+					<Form>
+						<Fields>
+							<InputForm placeholder="Name" name="name" control={control} autoCapitalize="sentences" autoCorrect={false} error={errors.name && errors.name.message}/>
+							<Spacing height={10}/>
+							<InputForm placeholder="Price" name="amount" control={control} keyboardType="numeric" error={errors.amount && errors.amount.message} />												
+							<Spacing height={10}/>
+							<TransactionTypes>
+								<TransactionTypeButton type="up" title="Income" onPress={() => handleTransactionType('positive')}
+									isActive={transactionType === 'positive'}
+								/>
+								<TransactionTypeButton type="down" title="Outcome" onPress={() => handleTransactionType('negative')}
+									isActive={transactionType === 'negative'}
+								/>
+							</TransactionTypes>
+							<Spacing height={10}/>
+							<CategorySelectButton title={category.name} onPress={handleOpenSelectCategory}/>
+						</Fields>
+						<Button title="Send" onPress={handleSubmit(handleRegister as any)}/>
+					</Form>
 
-				<Modal visible={categoryModalOpen}>
-					<CategorySelect 
-						category={category}
-						setCategory={setCategory}
-						closeSelectCategory={handleCloseSelectCategory}
-					/>
-				</Modal>
-			</Container>
-		</TouchableWithoutFeedback>
+					<Modal visible={categoryModalOpen}>
+						<CategorySelect 
+							category={category}
+							setCategory={setCategory}
+							closeSelectCategory={handleCloseSelectCategory}
+						/>
+					</Modal>
+				</Container>
+			</TouchableWithoutFeedback>
 		</Animated.View>
 	);
 }

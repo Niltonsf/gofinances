@@ -36,7 +36,7 @@ interface HighlightDataProps {
 	total: PropsHighLight;
 }
 
-export function Dashboard({ drawerAnimationStyle }: any) {
+export function Dashboard({ drawerAnimationStyle}: any) {
 	const navigation = useNavigation();
 	const { firebaseFunctions } = useAuth();
 

@@ -48,7 +48,7 @@ function AuthProvider({ children }: AuthProviderProps) {
 			value={{
 				uid,
 				userSettings,
-				firebaseFunctions
+				firebaseFunctions			
 			}}
 		>
 			{ children }

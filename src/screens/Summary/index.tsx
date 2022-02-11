@@ -11,15 +11,16 @@ import {
 	MonthSelectIcon,
 	Month,
 	LoadingContainer,
+	DrawerContainer,
+	Icon
 } from './styles';
 import { HistoryCard } from '../../components/HistoryCard';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { categories } from '../../utils/categories';
 import { VictoryPie } from 'victory-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { useTheme } from 'styled-components';
 import { addMonths, subMonths, format } from 'date-fns';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
 import { useAuth } from '../../hooks/auth';
 import Animated from 'react-native-reanimated';
@@ -43,6 +44,7 @@ interface CategoryData {
 
 
 export function Summary({ drawerAnimationStyle }: any){
+	const navigation = useNavigation();
 	const { uid } = useAuth();
 	const [isLoading, setIsLoading] = useState(false);
 	const [selectedDate, setSelectedDate] = useState(new Date());
@@ -128,6 +130,9 @@ export function Summary({ drawerAnimationStyle }: any){
 		<Animated.View style={{ flex: 1, ...drawerAnimationStyle}}>
 			<Container>
 				<Header>
+					<DrawerContainer onPress={() => navigation.openDrawer()}>
+						<Icon name="menu" />
+					</DrawerContainer>
 					<Title>Summary by category</Title>
 				</Header>
 				{

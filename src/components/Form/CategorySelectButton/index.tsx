@@ -1,5 +1,6 @@
 import React from 'react';
 import { 
+	TouchContainer,
 	Container,
 	Category,
 	Icon
@@ -12,11 +13,13 @@ interface CategorySelectProps {
 
 export function CategorySelectButton({ title, onPress }: CategorySelectProps){
 	return (
-		<Container onPress={onPress}>
-			<Category>
-				{title}
-			</Category>
-			<Icon name="chevron-down"/>
-		</Container>
+		<TouchContainer onPress={onPress}>
+			<Container>
+				<Category>
+					{title}
+				</Category>
+				<Icon name="chevron-down"/>
+			</Container>
+		</TouchContainer>
 	);
 }

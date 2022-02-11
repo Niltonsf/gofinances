@@ -9,6 +9,7 @@ import { Summary } from '../../screens/Summary';
 //REDUX
 import { connect } from 'react-redux';
 import { setSelectedTab } from '../../stores/tab/tabActions';
+import { Settings } from '../../screens/Settings';
 
 const Drawer = createDrawerNavigator();
 
@@ -43,11 +44,11 @@ function CustomDrawer({ selectedTab, setSelectedTab }: any){
 				overlayColor='transparent'
 				drawerStyle={{
 					flex: 1,
-					width: '65%',
+					width: '70%',
 					paddingRight: 20,
 					backgroundColor: 'transparent'
 				}}
-				initialRouteName="Da"
+				initialRouteName="Dashboard"
 				drawerContent={props => {
 					setTimeout(() => {
 						setProgress(props.progress as any);
@@ -70,6 +71,10 @@ function CustomDrawer({ selectedTab, setSelectedTab }: any){
 
 				<Drawer.Screen name="Summary">
 					{props => <Summary drawerAnimationStyle={animatedStyle}/>}
+				</Drawer.Screen>
+
+				<Drawer.Screen name="Settings">
+					{props => <Settings drawerAnimationStyle={animatedStyle}/>}
 				</Drawer.Screen>
 
 			</Drawer.Navigator>
