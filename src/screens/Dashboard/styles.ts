@@ -23,7 +23,7 @@ export const Container = styled.View`
 
 export const Header = styled.View`
 	width: 100%;
-	height: ${RFPercentage(43)}px;
+	height: ${RFPercentage(40)}px;
 	padding-top: ${getStatusBarHeight() + RFValue(25)}px ;
 	background-color: ${({ theme }) => theme.colors.blue};
 	justify-content: center;
@@ -37,7 +37,7 @@ export const HighLightCards = styled.ScrollView.attrs({
 	contentContainerStyle: { paddingHorizontal: 24 }
 })`
 	width: 100%;
-	margin-bottom: ${RFValue(20)}px;
+	margin-bottom: ${RFValue(15)}px;
 `;
 
 export const Transactions = styled.View`
