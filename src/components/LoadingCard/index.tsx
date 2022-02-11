@@ -10,7 +10,7 @@ export default function LoadingCard() {
 
 	return (
 		<LoadingContainer>
-			<ActivityIndicator color={theme.colors.orange} size='large'/>
+			<ActivityIndicator color={theme.colors.blue} size='large'/>
 		</LoadingContainer>
 	);
 }

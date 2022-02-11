@@ -22,6 +22,7 @@ import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import rootReducer from './src/stores/rootReducer';
+import LoadingCard from './src/components/LoadingCard';
 
 const store = createStore(
 	rootReducer,
@@ -42,20 +43,23 @@ export default function App() {
 	}, []);
 
 	if (!fontsLoaded) {
-		return <AppLoading />;
+		return <LoadingCard />;
 	}
 
   return (
-		<ThemeProvider theme={theme}>
-			<StatusBar style="light"/>		
+		<ThemeProvider theme={theme}>					
 			<Provider store={store}>
 				<NavigationContainer>
 					{ user ? 
 						<AuthProvider>
+							<StatusBar style="light"/>
 							<DrawerRoutes /> 
 						</AuthProvider>
 						:
-						<AuthRoutes />
+						<>
+							<StatusBar style="dark"/>
+							<AuthRoutes />
+						</>
 					}				
 				</NavigationContainer>	
 			</Provider>

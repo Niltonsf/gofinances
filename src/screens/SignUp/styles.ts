@@ -1,5 +1,6 @@
 import { RFValue } from 'react-native-responsive-fontsize';
 import styled from 'styled-components/native';
+import { getBottomSpace, getStatusBarHeight } from 'react-native-iphone-x-helper';
 
 interface SpacingProps {
 	height: number;
@@ -8,11 +9,12 @@ interface SpacingProps {
 export const Container = styled.View`
 	flex: 1;
 	padding-horizontal: ${RFValue(30)}px;
+	margin-top: ${getStatusBarHeight()}px;
 `;
 
 export const Header = styled.View`
 	width: 100%;
-	height: 30%;
+	height: 25%;
 	justify-content: center;
 	align-items: center;
 `;
@@ -36,6 +38,7 @@ export const ReturnToLoginContainer = styled.View`
 	align-items: center;
 	justify-content: center;
 	margin-top: ${RFValue(30)}px;
+	margin-bottom: ${getBottomSpace()}px;
 `;
 
 export const NormalText = styled.Text`

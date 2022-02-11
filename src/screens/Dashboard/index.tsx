@@ -2,18 +2,14 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { 
 	Container,
 	Header,
-	UserInfo,
-	Photo,
-	User,
-	UserGreeting,
-	UserName,
-	UserWrapper,
 	HighLightCards,
 	Transactions,
 	Title,
 	TransactionsList,
 	LoadingContainer,
-	NoTransaction
+	NoTransaction,
+	DrawerContainer,
+	Icon
 } from './styles';
 import { HighLightCard } from '../../components/HighLightCard';
 import { TransactionCard, TransactionCardProps } from '../../components/TransactionCard';
@@ -25,6 +21,7 @@ import firestore from '@react-native-firebase/firestore';
 import LottieView from 'lottie-react-native';
 import NoTransactionLottie from '../../assets/no_transactions.json';
 import Animated from 'react-native-reanimated';
+import { useNavigation } from '@react-navigation/native';
 
 export interface DataListProps extends TransactionCardProps {
 	id: string;
@@ -41,7 +38,8 @@ interface HighlightDataProps {
 }
 
 export function Dashboard({ drawerAnimationStyle }: any) {
-	const { uid, userSettings } = useAuth();
+	const navigation = useNavigation();
+	const { uid } = useAuth();
 
 	const [isLoading, setIsLoading] = useState(true);
 	const [transactions, setTransactions] = useState<DataListProps[]>([]);
@@ -167,27 +165,20 @@ export function Dashboard({ drawerAnimationStyle }: any) {
 				{
 					isLoading ? 
 					<LoadingContainer>
-						<ActivityIndicator color={theme.colors.orange} size='large'/>
+						<ActivityIndicator color={theme.colors.blue} size='large'/>
 					</LoadingContainer>
 					:
 					<>
-						<Header>
-							<UserWrapper>
-								<UserInfo>
-									<Photo source={{ uri: 'http://github.com/niltonsf.png'}}/>
-									<User>
-										<UserGreeting>Ola,</UserGreeting>
-										<UserName>{userSettings.name}</UserName>
-									</User>
-								</UserInfo>
-							</UserWrapper>
-						</Header>
-
-						<HighLightCards>
-							<HighLightCard type="up" title="Income" amount={higlightData.entries.amount} lastTransaction={higlightData.entries.lastTransaction}/>
-							<HighLightCard type="down"title="Outcome" amount={higlightData.outcome.amount}lastTransaction={higlightData.outcome.lastTransaction}/>
-							<HighLightCard type="total" title="Total" amount={higlightData.total.amount} lastTransaction={higlightData.total.lastTransaction}/>
-						</HighLightCards>
+						<Header>							
+							<DrawerContainer onPress={() => navigation.openDrawer()}>
+								<Icon name="menu" />
+							</DrawerContainer>
+							<HighLightCards>
+								<HighLightCard type="up" title="Income" amount={higlightData.entries.amount} lastTransaction={higlightData.entries.lastTransaction}/>
+								<HighLightCard type="down"title="Outcome" amount={higlightData.outcome.amount}lastTransaction={higlightData.outcome.lastTransaction}/>
+								<HighLightCard type="total" title="Total" amount={higlightData.total.amount} lastTransaction={higlightData.total.lastTransaction}/>
+							</HighLightCards>
+						</Header>						
 
 						<Transactions>
 							<Title>Transactions</Title>
