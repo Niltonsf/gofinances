@@ -44,8 +44,8 @@ interface CategoryData {
 
 
 export function Summary({ drawerAnimationStyle }: any){
-	const navigation = useNavigation();
-	const { uid } = useAuth();
+	const navigation: any = useNavigation();
+	const { uid, firebaseFunctions } = useAuth();
 	const [isLoading, setIsLoading] = useState(false);
 	const [selectedDate, setSelectedDate] = useState(new Date());
 	const [totalByCategories, setTotalByCategories] = useState<CategoryData[]>([]);
@@ -62,21 +62,7 @@ export function Summary({ drawerAnimationStyle }: any){
 	async function loadData() {
 		setIsLoading(true);
 		const totalByCategory: CategoryData[] = [];
-		const responseFormatted: any = [];
-
-		await firestore()
-		.collection(uid!)
-		.orderBy('date')
-		.get().then(querySnapshot => {
-			querySnapshot.forEach(documentsSnapshot => {
-				const documentData = documentsSnapshot.data();
-				const newDocument: any = {
-					...documentData,
-					date: documentData.date.toDate()
-				}
-				responseFormatted.push(newDocument);
-			});
-		});
+		const responseFormatted: any = await firebaseFunctions.handleGetAllTransactions();
 
 		const outcomes = responseFormatted
 		.filter((outcome: TransactionData) => 

@@ -21,6 +21,7 @@ import LottieView from 'lottie-react-native';
 import NoTransactionLottie from '../../assets/no_transactions.json';
 import Animated from 'react-native-reanimated';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export interface DataListProps extends TransactionCardProps {
 	id: string;
@@ -37,7 +38,7 @@ interface HighlightDataProps {
 }
 
 export function Dashboard({ drawerAnimationStyle}: any) {
-	const navigation = useNavigation();
+	const navigation: any = useNavigation();
 	const { firebaseFunctions } = useAuth();
 
 	const [isLoading, setIsLoading] = useState(true);
@@ -75,20 +76,9 @@ export function Dashboard({ drawerAnimationStyle}: any) {
 		let outcomeSum = 0;
 		let totalValue = 0;
 
-		const currentMonth = new Date().getMonth();
-		const currentYear = new Date().getFullYear();
+		const transactions: DataListProps[] = await firebaseFunctions.handleGetAllTransactions();		
 
-		const transactions: DataListProps[] = 
-		await firebaseFunctions.handleAllTransactions();		
-
-		// Filtering current month transacations
-		const filteredTransactions = transactions.filter((item: DataListProps) => {
-			const itemYear = new Date(item.date).getFullYear();
-			const itemMonth = new Date(item.date).getMonth(); // 0 a 11
-			if (itemYear === currentYear && itemMonth === currentMonth) return item;
-		});
-
-		const transactionsFormatted: DataListProps[] = filteredTransactions.map((item: DataListProps) => {
+		const transactionsFormatted: DataListProps[] = transactions.map((item: DataListProps) => {
 
 			item.type === 'positive' ? entriesSum += Number(item.amount) : outcomeSum += Number(item.amount);
 
@@ -117,8 +107,8 @@ export function Dashboard({ drawerAnimationStyle}: any) {
 
 		setTransactions(transactionsFormatted);
 
-		const lastTransactionEntries = getLastTransactionDate(filteredTransactions, 'positive');
-		const lastTransactionOutcome = getLastTransactionDate(filteredTransactions, 'negative');
+		const lastTransactionEntries = getLastTransactionDate(transactions, 'positive');
+		const lastTransactionOutcome = getLastTransactionDate(transactions, 'negative');
 		const totalInterval = lastTotalTransationDate(lastTransactionEntries, lastTransactionOutcome);
 
 		setHighlightData({
@@ -148,7 +138,7 @@ export function Dashboard({ drawerAnimationStyle}: any) {
 		setIsLoading(false);
 	}
 
-	useEffect(() => {				
+	useEffect(() => {		
 		loadTransaction();
 	}, []);
 
@@ -196,8 +186,8 @@ export function Dashboard({ drawerAnimationStyle}: any) {
 								:
 								<TransactionsList
 									data={transactions}						
-									keyExtractor={item => item.id}
-									renderItem={({ item }) => <TransactionCard  data={item}/>}
+									keyExtractor={(item: { id: any }) => item.id}
+									renderItem={({ item }: any) => <TransactionCard  data={item}/>}
 								/>
 							}
 						</Transactions>

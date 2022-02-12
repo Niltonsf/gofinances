@@ -21,8 +21,6 @@ import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import uuid from 'react-native-uuid';
 import { useNavigation } from '@react-navigation/native'
-import firestore from '@react-native-firebase/firestore';
-import auth from '@react-native-firebase/auth';
 import Animated from 'react-native-reanimated';
 import { useAuth } from '../../hooks/auth';
 
@@ -39,7 +37,7 @@ const schema = Yup.object().shape({
 export function Register({ drawerAnimationStyle, setSelectedTab }: any) {
 	const { firebaseFunctions } = useAuth();
 
-	const navigation = useNavigation();
+	const navigation: any = useNavigation();
 	
 	const [transactionType, setTransactionType] = useState('');
 	const [categoryModalOpen, setCategoryModalOpen] = useState(false);

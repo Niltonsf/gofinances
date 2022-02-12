@@ -1,6 +1,6 @@
 import firestore from '@react-native-firebase/firestore';
 import { DataListProps } from '../screens/Dashboard';
-import auth from '@react-native-firebase/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export interface NewTransactionProps {
 	id: string;
@@ -13,6 +13,7 @@ export interface NewTransactionProps {
 
 class FirebaseFunctions {	
 	uid: string | undefined;	
+	asyncStorageName = '@data_from_firestore'; 
 
 	constructor(uid: string | undefined) {
 		this.uid = uid;
@@ -48,7 +49,7 @@ class FirebaseFunctions {
 			await firestore()
 			.collection(this.uid)
 			.doc(docName)						
-			.set({ finances: newFinances });			
+			.set({ finances: newFinances });		
 		} catch (err) {
 			throw new Error(err as any);
 		}
@@ -69,34 +70,32 @@ class FirebaseFunctions {
 
 		const data: DataListProps[] = documentSnapshot.finances;
 
-		// const formattedDate = data.forEach((value: DataListProps) => {
-		// 	console.log(value);
-		// })
+		const newDataWithFormattedDate = data.map((value: any) => {
+			const newValue: any = {
+				...value,
+				date: value.date.toDate()
+			};
+			return newValue;
+		});
 
-		return data;
+		// Storing in database
+		try {
+			const jsonData = JSON.stringify(newDataWithFormattedDate);
+			await AsyncStorage.setItem(this.asyncStorageName, jsonData);
+		} catch (err) {
+			throw new Error(err as any);
+		}
+
+		return newDataWithFormattedDate;
 	}
 
-	public async handleAllTransactions(): Promise<any> {
-		if(this.uid === undefined) return;		
-		
-		const newDoc: any = [];
-
-		await firestore()
-		.collection(this.uid)
-		.orderBy('date')
-		.get()
-		.then(querySnapshot => {
-			querySnapshot.forEach(documentsSnapshot => {
-				const documentData = documentsSnapshot.data();
-				const newDocument: any = {
-					...documentData,
-					date: documentData.date.toDate()
-				}										
-				newDoc.unshift(newDocument);
-			});
-		});			
-		console.log(newDoc);
-		return newDoc;
+	async getDataFromAsyncStorage(): Promise<any> {
+		try {
+			const jsonValue = await AsyncStorage.getItem(this.asyncStorageName);
+			return jsonValue != null ? JSON.parse(jsonValue) : null;
+		} catch(e) {
+			throw new Error(e as any);
+		}
 	}
 }
 

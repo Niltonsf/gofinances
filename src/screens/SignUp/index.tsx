@@ -19,7 +19,6 @@ import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button } from '../../components/Form/Button';
-import { Divider } from '../../components/Divider';
 import { Alert } from 'react-native';
 import LoadingCard from '../../components/LoadingCard';
 import auth from '@react-native-firebase/auth';
