@@ -75,8 +75,8 @@ export function Register({ drawerAnimationStyle, setSelectedTab }: any) {
 		}
 
 		try {
-			firebaseFunctions.handleAddNewTransaction(newTransaction);			
-
+			await firebaseFunctions.insertDataIntoAsyncStorage(newTransaction);
+			
 			// RESETING FIELDS
 			setTransactionType('');
 			setCategory(
@@ -87,7 +87,7 @@ export function Register({ drawerAnimationStyle, setSelectedTab }: any) {
 			);
 			reset();
 			setSelectedTab("Dashboard");
-			navigation.navigate('Dashboard' as any);
+			navigation.navigate("Dashboard"as any);
 		} catch (e) {
 			console.log(e);
 			Alert.alert("Something went wrong on saving!");

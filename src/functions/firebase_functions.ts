@@ -13,7 +13,7 @@ export interface NewTransactionProps {
 
 class FirebaseFunctions {	
 	uid: string | undefined;	
-	asyncStorageName = '@data_from_firestore'; 
+	asyncStorageName = '@finances:firestore'; 
 
 	constructor(uid: string | undefined) {
 		this.uid = uid;
@@ -27,29 +27,17 @@ class FirebaseFunctions {
 		return documentName;
 	}
 
-	public async handleAddNewTransaction(newTransaction: NewTransactionProps) {
+	public async handleAddNewTransaction(newTransaction: NewTransactionProps[]) {
 		if(this.uid === undefined) return;
 		
+		// GETTING THE CURRENT DOCUMENT TO INSERT DAT
 		const docName = this.getCurrentDocToFetch();
 
-		// READ THE CURRENT DATA INSIDE THE ARRAY
-		const documentSnapshot: any = await firestore()
-			.collection(this.uid)
-			.doc(docName)						
-			.get()
-			.then(documentSnapshot => {								
-				return documentSnapshot.data() === undefined ? { finances: [] } : documentSnapshot.data();
-			});
-		const oldFinances = documentSnapshot.finances;
-		// GET THE CONTENT FROM THE FIELD
-		const newFinances = [...oldFinances];
-		newFinances.unshift(newTransaction);
-		// INSERT THE CONTENT INSIDE AN ARRAY
 		try {
 			await firestore()
 			.collection(this.uid)
 			.doc(docName)						
-			.set({ finances: newFinances });		
+			.set({ finances: newTransaction });					
 		} catch (err) {
 			throw new Error(err as any);
 		}
@@ -70,32 +58,57 @@ class FirebaseFunctions {
 
 		const data: DataListProps[] = documentSnapshot.finances;
 
-		const newDataWithFormattedDate = data.map((value: any) => {
-			const newValue: any = {
+		const filteredData = data.map((value: any) => {
+			const newDate = {
 				...value,
-				date: value.date.toDate()
-			};
-			return newValue;
+				date: typeof value.date === 'string' ? value.date : value.date.toDate()
+			}
+			return newDate;
 		});
 
-		// Storing in database
-		try {
-			const jsonData = JSON.stringify(newDataWithFormattedDate);
-			await AsyncStorage.setItem(this.asyncStorageName, jsonData);
-		} catch (err) {
-			throw new Error(err as any);
-		}
-
-		return newDataWithFormattedDate;
+		return filteredData;
 	}
 
 	async getDataFromAsyncStorage(): Promise<any> {
 		try {
 			const jsonValue = await AsyncStorage.getItem(this.asyncStorageName);
-			return jsonValue != null ? JSON.parse(jsonValue) : null;
+			return jsonValue !== null ? JSON.parse(jsonValue) : [];
 		} catch(e) {
 			throw new Error(e as any);
 		}
+	}
+
+	async insertDataIntoAsyncStorage(newData: NewTransactionProps) {
+		// GETTING OLD DATA
+		const jsonValue = await AsyncStorage.getItem(this.asyncStorageName);
+		const oldData = jsonValue !== null ? JSON.parse(jsonValue) : [];
+
+		// STORING OLD DATA
+		const newFinances = [...oldData];
+
+		// INSERTING NEW DATA
+		newFinances.unshift(newData);	
+
+		// INSERTING DATA INTO DATABASE
+		await this.handleAddNewTransaction(newFinances);
+
+		// UPDATING ASYNC STORAGE
+		try {
+			const jsonData = JSON.stringify(newFinances);
+			await AsyncStorage.setItem(this.asyncStorageName, jsonData);
+		} catch (err) {
+			throw new Error(err as any);
+		}
+	}
+
+	async removeItemValue() {
+    try {
+        await AsyncStorage.removeItem(this.asyncStorageName);
+        return true;
+    }
+    catch(exception) {
+        return false;
+    }
 	}
 }
 

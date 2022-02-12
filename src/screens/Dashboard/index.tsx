@@ -21,8 +21,6 @@ import LottieView from 'lottie-react-native';
 import NoTransactionLottie from '../../assets/no_transactions.json';
 import Animated from 'react-native-reanimated';
 import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
 export interface DataListProps extends TransactionCardProps {
 	id: string;
 }
@@ -76,12 +74,12 @@ export function Dashboard({ drawerAnimationStyle}: any) {
 		let outcomeSum = 0;
 		let totalValue = 0;
 
-		const transactions: DataListProps[] = await firebaseFunctions.handleGetAllTransactions();		
+		const transactions: DataListProps[] = await firebaseFunctions.getDataFromAsyncStorage();		
 
 		const transactionsFormatted: DataListProps[] = transactions.map((item: DataListProps) => {
 
 			item.type === 'positive' ? entriesSum += Number(item.amount) : outcomeSum += Number(item.amount);
-
+			
 			const amount = Number(item.amount).toLocaleString('pt-BR', {
 				style: 'currency',
 				currency: 'BRL'
