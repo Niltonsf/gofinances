@@ -3,6 +3,8 @@ import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import FirebaseFunctions from '../functions/firebase_functions';
 import { NewTransactionProps } from '../functions/firebase_functions';
+import { DataListProps } from '../screens/Dashboard';
+
 interface AuthProviderProps {
 	children: ReactNode;
 }
@@ -14,6 +16,7 @@ interface UserSettingsProps {
 
 interface FirebaseFunctionsProps {	
 	handleAddNewTransaction(data: NewTransactionProps): void;
+	handleGetAllTransactions(): Promise<DataListProps[]>;
 	handleAllTransactions(): any;
 }
 

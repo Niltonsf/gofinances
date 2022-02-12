@@ -21,7 +21,6 @@ import LottieView from 'lottie-react-native';
 import NoTransactionLottie from '../../assets/no_transactions.json';
 import Animated from 'react-native-reanimated';
 import { useNavigation } from '@react-navigation/native';
-import { StatusBar } from 'expo-status-bar';
 
 export interface DataListProps extends TransactionCardProps {
 	id: string;
@@ -149,7 +148,7 @@ export function Dashboard({ drawerAnimationStyle}: any) {
 		setIsLoading(false);
 	}
 
-	useEffect(() => {		
+	useEffect(() => {				
 		loadTransaction();
 	}, []);
 
