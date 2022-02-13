@@ -74,7 +74,7 @@ export function Dashboard({ drawerAnimationStyle}: any) {
 		let outcomeSum = 0;
 		let totalValue = 0;
 
-		const transactions: DataListProps[] = await firebaseFunctions.getDataFromAsyncStorage();		
+		const transactions: DataListProps[] = await firebaseFunctions.getCurrentDatasFromAsyncStorage();		
 
 		const transactionsFormatted: DataListProps[] = transactions.map((item: DataListProps) => {
 

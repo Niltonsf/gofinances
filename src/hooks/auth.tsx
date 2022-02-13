@@ -17,7 +17,8 @@ interface UserSettingsProps {
 interface FirebaseFunctionsProps {	
 	handleAddNewTransaction(data: NewTransactionProps): void;
 	handleGetAllTransactions(): Promise<DataListProps[]>;
-	getDataFromAsyncStorage(): Promise<any>;
+	getCurrentDatasFromAsyncStorage(): Promise<any>;
+	getAllDatasFromAsyncStorage(): Promise<any>;
 	insertDataIntoAsyncStorage(data: NewTransactionProps): any;
 }
 

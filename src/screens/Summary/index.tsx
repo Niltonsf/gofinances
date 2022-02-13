@@ -62,7 +62,7 @@ export function Summary({ drawerAnimationStyle }: any){
 	async function loadData() {
 		setIsLoading(true);
 		const totalByCategory: CategoryData[] = [];
-		const responseFormatted: any = await firebaseFunctions.handleGetAllTransactions();
+		const responseFormatted: any = await firebaseFunctions.getAllDatasFromAsyncStorage();
 
 		const outcomes = responseFormatted
 		.filter((outcome: TransactionData) => 

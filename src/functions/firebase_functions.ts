@@ -19,24 +19,13 @@ class FirebaseFunctions {
 		this.uid = uid;
 	}
 
-	private getCurrentDocToFetch(): string {
-		const currentDate = new Date();
-		const month = currentDate.getMonth();
-		const year = currentDate.getFullYear();
-		const documentName = String(month) + String(year);
-		return documentName;
-	}
-
 	public async handleAddNewTransaction(newTransaction: NewTransactionProps[]) {
 		if(this.uid === undefined) return;
-		
-		// GETTING THE CURRENT DOCUMENT TO INSERT DAT
-		const docName = this.getCurrentDocToFetch();
 
 		try {
 			await firestore()
 			.collection(this.uid)
-			.doc(docName)						
+			.doc('transactions')						
 			.set({ finances: newTransaction });					
 		} catch (err) {
 			throw new Error(err as any);
@@ -46,11 +35,9 @@ class FirebaseFunctions {
 	public async handleGetAllTransactions(): Promise<DataListProps[]> {
 		if(this.uid === undefined) return [];	
 
-		const docName = this.getCurrentDocToFetch();
-
 		const documentSnapshot: any = await firestore()
 			.collection(this.uid)
-			.doc(docName)						
+			.doc('transactions')						
 			.get()
 			.then(documentSnapshot => {								
 				return documentSnapshot.data() === undefined ? { finances: [] } : documentSnapshot.data();
@@ -66,10 +53,35 @@ class FirebaseFunctions {
 			return newDate;
 		});
 
+		// Add into asyncStorage
+		try {
+			const jsonData = JSON.stringify(filteredData);
+			await AsyncStorage.setItem(this.asyncStorageName, jsonData);
+		} catch (err) {
+			throw new Error(err as any);
+		}
+
 		return filteredData;
 	}
 
-	async getDataFromAsyncStorage(): Promise<any> {
+	async getCurrentDatasFromAsyncStorage(): Promise<any> {
+		try {
+			const jsonValue = await AsyncStorage.getItem(this.asyncStorageName);
+			const currentDate = new Date();
+			const currentMonth = currentDate.getMonth();
+			const currentYear = currentDate.getFullYear();			
+			const data = jsonValue !== null ? JSON.parse(jsonValue) : [];
+			const filteredValues = data === [] ? [] : data.filter((value: any) => {				
+				const newDate = typeof value.date === 'string' ? new Date(value.date) : value.date;
+				return newDate.getMonth() === currentMonth && newDate.getFullYear() === currentYear ?  newDate : null;
+			});
+			return filteredValues;
+		} catch(e) {
+			throw new Error(e as any);
+		}
+	}
+
+	async getAllDatasFromAsyncStorage(): Promise<any> {
 		try {
 			const jsonValue = await AsyncStorage.getItem(this.asyncStorageName);
 			return jsonValue !== null ? JSON.parse(jsonValue) : [];
