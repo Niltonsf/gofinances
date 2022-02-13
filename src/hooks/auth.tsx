@@ -1,25 +1,21 @@
 import React, { createContext, useContext, ReactNode, useEffect, useState } from 'react';
-import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
 import FirebaseFunctions from '../functions/firebase_functions';
 import { NewTransactionProps } from '../functions/firebase_functions';
-import { DataListProps } from '../screens/Dashboard';
+import { UserSettingsProps } from '../functions/firebase_functions';
 
 interface AuthProviderProps {
 	children: ReactNode;
 }
 
-interface UserSettingsProps {
-	name: string;
-	photo: string;
-}
-
 interface FirebaseFunctionsProps {	
-	handleAddNewTransaction(data: NewTransactionProps): void;
-	handleGetAllTransactions(): Promise<DataListProps[]>;
+	handleAddNewTransaction(data: NewTransactionProps[]): Promise<void>;
+	handleGetAllDatasFromUser(): Promise<void>;
 	getCurrentDatasFromAsyncStorage(): Promise<any>;
 	getAllDatasFromAsyncStorage(): Promise<any>;
-	insertDataIntoAsyncStorage(data: NewTransactionProps): any;
+	insertDataIntoAsyncStorage(newData: NewTransactionProps): Promise<void>;
+	getSettingsFromAsyncStorage(): Promise<UserSettingsProps>;
+	firstTimeLogin(): Promise<void>;
 }
 
 interface AuthDataProps {
@@ -37,11 +33,10 @@ function AuthProvider({ children }: AuthProviderProps) {
 	
 	useEffect(() => {
 		async function handleUserSettings() {
-			const userSettings = await firestore().collection(uid!).doc('settings').get();
-			const filteredSettings = userSettings.data();
+			const userSettings = await firebaseFunctions.getSettingsFromAsyncStorage();
 			setUserSettings({
-				name: filteredSettings!.name,
-				photo: filteredSettings!.photo,
+				name: userSettings.name,
+				photo: userSettings.photo,
 			});
 		}
 

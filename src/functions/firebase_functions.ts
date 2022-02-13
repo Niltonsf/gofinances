@@ -11,15 +11,22 @@ export interface NewTransactionProps {
 	date: Date;
 }
 
+export interface UserSettingsProps {
+	name: string;
+	photo: string;
+}
+
 class FirebaseFunctions {	
 	uid: string | undefined;	
-	asyncStorageName = '@finances:firestore'; 
+	asyncStorageFinances = '@finances:firestore';
+	asyncStorageSettings = '@finances:settings';
+	asyncStorageFirstTime = '@finances:firstTime';
 
 	constructor(uid: string | undefined) {
 		this.uid = uid;
 	}
 
-	public async handleAddNewTransaction(newTransaction: NewTransactionProps[]) {
+	public async handleAddNewTransaction(newTransaction: NewTransactionProps[]): Promise<void> {
 		if(this.uid === undefined) return;
 
 		try {
@@ -32,9 +39,10 @@ class FirebaseFunctions {
 		}
 	}
 
-	public async handleGetAllTransactions(): Promise<DataListProps[]> {
-		if(this.uid === undefined) return [];	
+	public async handleGetAllDatasFromUser(): Promise<void> {
+		if(this.uid === undefined) return;	
 
+		// GETTING TRANSACTIONS
 		const documentSnapshot: any = await firestore()
 			.collection(this.uid)
 			.doc('transactions')						
@@ -53,20 +61,33 @@ class FirebaseFunctions {
 			return newDate;
 		});
 
-		// Add into asyncStorage
+		// ADD TRANSACTION TO ASYNC STORAGE
 		try {
 			const jsonData = JSON.stringify(filteredData);
-			await AsyncStorage.setItem(this.asyncStorageName, jsonData);
+			await AsyncStorage.setItem(this.asyncStorageFinances, jsonData);
 		} catch (err) {
 			throw new Error(err as any);
 		}
 
-		return filteredData;
+		const settingsSnapshot: any = await firestore()
+			.collection(this.uid)
+			.doc('settings')						
+			.get()
+			.then(documentSnapshot => {								
+				return documentSnapshot.data() === undefined ? { name: 'Joe Doe' } : documentSnapshot.data();
+			});
+
+		try {
+			const jsonData = JSON.stringify(settingsSnapshot);
+			await AsyncStorage.setItem(this.asyncStorageSettings, jsonData);
+		} catch (err) {
+			throw new Error(err as any);
+		}
 	}
 
 	async getCurrentDatasFromAsyncStorage(): Promise<any> {
 		try {
-			const jsonValue = await AsyncStorage.getItem(this.asyncStorageName);
+			const jsonValue = await AsyncStorage.getItem(this.asyncStorageFinances);
 			const currentDate = new Date();
 			const currentMonth = currentDate.getMonth();
 			const currentYear = currentDate.getFullYear();			
@@ -83,16 +104,16 @@ class FirebaseFunctions {
 
 	async getAllDatasFromAsyncStorage(): Promise<any> {
 		try {
-			const jsonValue = await AsyncStorage.getItem(this.asyncStorageName);
+			const jsonValue = await AsyncStorage.getItem(this.asyncStorageFinances);
 			return jsonValue !== null ? JSON.parse(jsonValue) : [];
 		} catch(e) {
 			throw new Error(e as any);
 		}
 	}
 
-	async insertDataIntoAsyncStorage(newData: NewTransactionProps) {
+	async insertDataIntoAsyncStorage(newData: NewTransactionProps): Promise<void> {
 		// GETTING OLD DATA
-		const jsonValue = await AsyncStorage.getItem(this.asyncStorageName);
+		const jsonValue = await AsyncStorage.getItem(this.asyncStorageFinances);
 		const oldData = jsonValue !== null ? JSON.parse(jsonValue) : [];
 
 		// STORING OLD DATA
@@ -107,21 +128,50 @@ class FirebaseFunctions {
 		// UPDATING ASYNC STORAGE
 		try {
 			const jsonData = JSON.stringify(newFinances);
-			await AsyncStorage.setItem(this.asyncStorageName, jsonData);
+			await AsyncStorage.setItem(this.asyncStorageFinances, jsonData);
 		} catch (err) {
 			throw new Error(err as any);
 		}
 	}
 
-	async removeItemValue() {
-    try {
-        await AsyncStorage.removeItem(this.asyncStorageName);
-        return true;
-    }
-    catch(exception) {
-        return false;
-    }
+	async getSettingsFromAsyncStorage(): Promise<UserSettingsProps> {
+		try {
+			const jsonValue = await AsyncStorage.getItem(this.asyncStorageSettings);
+			return jsonValue !== null ? JSON.parse(jsonValue) : { name: 'Joe Doe', photo: 'No Photo' };
+		} catch (err) {
+			throw new Error(err as any);
+		}
 	}
+
+	async firstTimeLogin(): Promise<void> {
+		const firstTime = await AsyncStorage.getItem(this.asyncStorageFirstTime);
+
+		if (firstTime) return;
+
+		// SETTINGS DATA
+		try {
+			await this.handleGetAllDatasFromUser();
+		} catch (err: any) {
+			throw new Error(err);
+		}
+
+		// SETTING NOT FIRST TIME IN ASYNC STORAGE
+		try {
+			await AsyncStorage.setItem(this.asyncStorageFirstTime, 'false');
+		} catch (err) {
+			throw new Error(err as any);
+		}
+	}
+
+	// async removeItemValue() {
+  //   try {
+  //       await AsyncStorage.removeItem(this.asyncStorageFinances);
+  //       return true;
+  //   }
+  //   catch(exception) {
+  //       return false;
+  //   }
+	// }
 }
 
 export default FirebaseFunctions;
