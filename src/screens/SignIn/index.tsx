@@ -25,6 +25,7 @@ import LottieView from 'lottie-react-native';
 import SignInLottie from '../../assets/signInLottie.json';
 import DismissKeyboard from '../../components/DismissKeyboard';
 import LoadingCard from '../../components/LoadingCard';
+import FirebaseFunctions from '../../functions/firebase_functions';
 
 interface LoginProps {
 	email: string;
@@ -41,15 +42,24 @@ export function SignIn({ navigation }: any){
 
 	const { control, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(schema)});
 
-	function handleLogin(form: LoginProps) {
+	async function handleLogin(form: LoginProps) {
 		setIsLoading(true);
 
-		auth().signInWithEmailAndPassword(form.email, form.password)
-		.then(() => {})
-		.catch((error) => {
-			setIsLoading(false);
-			Alert.alert(error.message)
-		});
+		try {
+			const userObj = await auth().signInWithEmailAndPassword(form.email, form.password);
+			// const firebaseFunctions: any = new FirebaseFunctions(userObj.user.uid);
+			// const data = await firebaseFunctions.firstTimeLogin(); 
+			// const transactions = await firebaseFunctions.loadTransaction();
+			// console.log(data);
+			// console.log(transactions);
+				// setUserSettings({
+		// 		name: data.name,
+		// 		photo: data.photo,
+		// });	
+		}
+		catch (err) {
+			console.log(err);
+		}
 	}
 	
 	return (

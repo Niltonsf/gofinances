@@ -102,6 +102,7 @@ class FirebaseFunctions {
 		}
 	}
 
+	// fetchUserProfileFirestore and fetchUserTransationsFirestore
 	async getAllDatasFromAsyncStorage(): Promise<any> {
 		try {
 			const jsonValue = await AsyncStorage.getItem(this.asyncStorageFinances);
@@ -143,6 +144,7 @@ class FirebaseFunctions {
 		}
 	}
 
+	// fetchUserProfile and fetchUserTransations
 	async firstTimeLogin(): Promise<any> {
 		const firstTime = await AsyncStorage.getItem(this.asyncStorageFirstTime);
 		
@@ -151,7 +153,7 @@ class FirebaseFunctions {
 
 		// SETTINGS DATA
 		try {
-			await this.handleGetAllDatasFromUser();			
+			await this.handleGetAllDatasFromUser();
 		} catch (err: any) {
 			throw new Error(err);
 		}

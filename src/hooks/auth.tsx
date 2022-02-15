@@ -32,21 +32,19 @@ function AuthProvider({ children }: AuthProviderProps) {
 	const uid = auth().currentUser?.uid;
 	const firebaseFunctions: FirebaseFunctionsProps = new FirebaseFunctions(uid);
 	
+	async function handleUserSettings() {
+		// GETTING DATA IF USERS FIRST TIME
+		const data = await firebaseFunctions.firstTimeLogin();   
+		console.log(data);         
+		
+		setUserSettings({
+				name: data.name,
+				photo: data.photo,
+		});
+	}
+
 	useEffect(() => {
-		async function handleUserSettings() {
-			// GETTING DATA IF USERS FIRST TIME
-			async function firstTime() {
-					return await firebaseFunctions.firstTimeLogin();            
-			}
-			const data = await firstTime();
-			
-			setUserSettings({
-					name: data.name,
-					photo: data.photo,
-			});
-		}
-	
-		handleUserSettings();
+		handleUserSettings().then(() => {});
 	}, []);
 
 	return (

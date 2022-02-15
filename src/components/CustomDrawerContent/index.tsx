@@ -20,10 +20,15 @@ import { useAuth } from '../../hooks/auth';
 
 
 export function CustomDrawerContent({ navigation, selectedTab, setSelectedTab }: any){
-	const { userSettings } = useAuth();
+	const { userSettings, firebaseFunctions } = useAuth();
 
-	function logOut() {
-		auth().signOut();
+	async function logOut() {
+		try {
+			auth().signOut();
+			await firebaseFunctions.removeItemValue();
+		} catch(err) {
+			console.log(err);
+		}
 	}
 
 	return (

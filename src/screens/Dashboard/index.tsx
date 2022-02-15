@@ -13,7 +13,7 @@ import {
 } from './styles';
 import { HighLightCard } from '../../components/HighLightCard';
 import { TransactionCard, TransactionCardProps } from '../../components/TransactionCard';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import { useAuth } from '../../hooks/auth';
 import { ActivityIndicator } from 'react-native';
 import { useTheme } from 'styled-components'
@@ -21,6 +21,8 @@ import LottieView from 'lottie-react-native';
 import NoTransactionLottie from '../../assets/no_transactions.json';
 import Animated from 'react-native-reanimated';
 import { useNavigation } from '@react-navigation/native';
+import auth from '@react-native-firebase/auth';
+import FirebaseFunctions from '../../functions/firebase_functions';
 
 export interface DataListProps extends TransactionCardProps {
 	id: string;
@@ -37,16 +39,21 @@ interface HighlightDataProps {
 }
 
 export function Dashboard({ drawerAnimationStyle}: any) {
+	const uid = auth().currentUser?.uid;
+	console.log(uid);
+	const firebaseFunctions: any = new FirebaseFunctions(uid);
+
 	const navigation: any = useNavigation();
-	const { firebaseFunctions } = useAuth();
+	const isFocused = useIsFocused();
 
 	const [isLoading, setIsLoading] = useState(true);
-	const [delayComplete, setDelayComplete] = useState(false);
 	const [transactions, setTransactions] = useState<DataListProps[]>([]);
 	const [higlightData, setHighlightData] = useState<HighlightDataProps>({} as HighlightDataProps);
 	const theme = useTheme();
 
-	async function loadTransaction(): Promise<any> {
+	async function loadTransaction(): Promise<any> {		
+		await firebaseFunctions.firstTimeLogin();
+		
 		const data = await firebaseFunctions.loadTransaction();
 
 		setTransactions(data.transactionsFormatted);
@@ -57,8 +64,11 @@ export function Dashboard({ drawerAnimationStyle}: any) {
 	}
 
 	useEffect(() => {
-		loadTransaction();
-	}, [transactions]);
+		if (isFocused) {
+			loadTransaction().then(() => {});
+		}
+	}, [isFocused]);
+
 
 	return (
 		<Animated.View style={{ flex: 1, ...drawerAnimationStyle}}>			
