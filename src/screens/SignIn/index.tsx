@@ -37,7 +37,6 @@ const schema = Yup.object().shape({
 });
 
 export function SignIn({ navigation }: any){
-	const theme = useTheme();
 	const [isLoading, setIsLoading] = useState(false);
 
 	const { control, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(schema)});
@@ -52,7 +51,7 @@ export function SignIn({ navigation }: any){
 			Alert.alert(error.message)
 		});
 	}
-
+	
 	return (
 		<>
 		{

@@ -40,7 +40,7 @@ class FirebaseFunctions {
 	}
 
 	public async handleGetAllDatasFromUser(): Promise<void> {
-		if(this.uid === undefined) return;	
+		if(this.uid === undefined) return;
 
 		// GETTING TRANSACTIONS
 		const documentSnapshot: any = await firestore()
@@ -68,7 +68,7 @@ class FirebaseFunctions {
 		} catch (err) {
 			throw new Error(err as any);
 		}
-
+		
 		const settingsSnapshot: any = await firestore()
 			.collection(this.uid)
 			.doc('settings')						
@@ -143,35 +143,136 @@ class FirebaseFunctions {
 		}
 	}
 
-	async firstTimeLogin(): Promise<void> {
+	async firstTimeLogin(): Promise<any> {
 		const firstTime = await AsyncStorage.getItem(this.asyncStorageFirstTime);
-
-		if (firstTime) return;
+		
+		if (firstTime !== this.uid) await this.removeItemValue();
+		if (firstTime && firstTime === this.uid) return await this.getSettingsFromAsyncStorage();
 
 		// SETTINGS DATA
 		try {
-			await this.handleGetAllDatasFromUser();
+			await this.handleGetAllDatasFromUser();			
 		} catch (err: any) {
 			throw new Error(err);
 		}
 
-		// SETTING NOT FIRST TIME IN ASYNC STORAGE
+		// SETTING UP FIRST TIME IN ASYNC STORAGE
 		try {
-			await AsyncStorage.setItem(this.asyncStorageFirstTime, 'false');
+			await AsyncStorage.setItem(this.asyncStorageFirstTime, this.uid!);
 		} catch (err) {
 			throw new Error(err as any);
 		}
+
+		const data = await this.getSettingsFromAsyncStorage();
+
+		return data;
 	}
 
-	// async removeItemValue() {
-  //   try {
-  //       await AsyncStorage.removeItem(this.asyncStorageFinances);
-  //       return true;
-  //   }
-  //   catch(exception) {
-  //       return false;
-  //   }
-	// }
+	async removeItemValue() {
+    try {
+        await AsyncStorage.removeItem(this.asyncStorageFinances);
+				await AsyncStorage.removeItem(this.asyncStorageSettings);
+				await AsyncStorage.removeItem(this.asyncStorageFirstTime);
+        return true;
+    }
+    catch(exception) {
+        return false;
+    }
+	}
+
+	// LOAD DATA
+	private lastTotalTransationDate(lastTransactionEntries: string, lastTransactionOutcome: string): string {
+		if (lastTransactionEntries !== 'NaN of Invalid Date') {
+			return `from 01 to ${lastTransactionEntries}`;
+		} else if (lastTransactionOutcome !== 'NaN of Invalid Date') {
+			return `from 01 to ${lastTransactionOutcome}`;
+		} else {
+			return 'No transactions';
+		}
+	}
+
+	private getLastTransactionDate(collection: DataListProps[], type: 'positive' | 'negative') {
+		const lastTransaction = new Date(
+			Math.max.apply(Math, collection
+			.filter(transaction => transaction.type === type
+			)
+			.map(transaction => new Date(transaction.date).getTime()))
+		);
+
+		const day = lastTransaction.getDate();
+		const month = lastTransaction.toLocaleString(`en-US`, {
+			month: 'long'
+		});
+		return `${day} of ${month}`
+	}
+
+	async loadTransaction(): Promise<any> {
+		let entriesSum = 0;
+		let outcomeSum = 0;
+		let totalValue = 0;
+
+		const transactions: DataListProps[] = await this.getCurrentDatasFromAsyncStorage();
+
+		const transactionsFormatted: DataListProps[] = transactions.map((item: DataListProps) => {
+
+			item.type === 'positive' ? entriesSum += Number(item.amount) : outcomeSum += Number(item.amount);
+			
+			const amount = Number(item.amount).toLocaleString('pt-BR', {
+				style: 'currency',
+				currency: 'BRL'
+			});
+
+			const date = Intl.DateTimeFormat('pt-BR',{
+				day: '2-digit',
+				month: '2-digit',
+				year: '2-digit'
+			}).format(new Date(item.date));
+
+			return {
+				id: item.id,
+				name: item.name,
+				amount,
+				type: item.type,
+				category: item.category,
+				date
+			}
+		});
+
+		totalValue = entriesSum - outcomeSum;
+
+		const lastTransactionEntries = this.getLastTransactionDate(transactions, 'positive');
+		const lastTransactionOutcome = this.getLastTransactionDate(transactions, 'negative');
+		const totalInterval = this.lastTotalTransationDate(lastTransactionEntries, lastTransactionOutcome);
+
+		const higlightData = {
+			entries: {
+				amount: entriesSum.toLocaleString('pt-BR', {
+					style: 'currency',
+					currency: 'BRL'
+				}),
+				lastTransaction: lastTransactionEntries === 'NaN of Invalid Date' ? 'No transactions' : `Last income was ${lastTransactionEntries}`
+			},
+			outcome: {
+				amount: outcomeSum.toLocaleString('pt-BR', {
+					style: 'currency',
+					currency: 'BRL'
+				}),
+				lastTransaction: lastTransactionOutcome === 'NaN of Invalid Date' ? 'No transactions' : `Last outcome was ${lastTransactionOutcome}`
+			},
+			total: {
+				amount: totalValue.toLocaleString('pt-BR', {
+					style: 'currency',
+					currency: 'BRL'
+				}),
+				lastTransaction: totalInterval
+			}
+		};
+
+		return {
+			transactionsFormatted,
+			higlightData
+		}
+	}
 }
 
 export default FirebaseFunctions;

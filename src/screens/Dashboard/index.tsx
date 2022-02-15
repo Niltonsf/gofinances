@@ -21,6 +21,7 @@ import LottieView from 'lottie-react-native';
 import NoTransactionLottie from '../../assets/no_transactions.json';
 import Animated from 'react-native-reanimated';
 import { useNavigation } from '@react-navigation/native';
+import AppLoading from 'expo-app-loading';
 export interface DataListProps extends TransactionCardProps {
 	id: string;
 }
@@ -44,105 +45,20 @@ export function Dashboard({ drawerAnimationStyle}: any) {
 	const [higlightData, setHighlightData] = useState<HighlightDataProps>({} as HighlightDataProps);
 	const theme = useTheme();
 
-	function getLastTransactionDate(collection: DataListProps[], type: 'positive' | 'negative') {
-		const lastTransaction = new Date(
-			Math.max.apply(Math, collection
-			.filter(transaction => transaction.type === type
-			)
-			.map(transaction => new Date(transaction.date).getTime()))
-		);
+	async function loadTransaction(): Promise<any> {
+		const data = await firebaseFunctions.loadTransaction();
 
-		const day = lastTransaction.getDate();
-		const month = lastTransaction.toLocaleString(`en-US`, {
-			month: 'long'
-		});
-		return `${day} of ${month}`
-	}
+		setTransactions(data.transactionsFormatted);
 
-	function lastTotalTransationDate(lastTransactionEntries: string, lastTransactionOutcome: string): string {
-		if (lastTransactionEntries !== 'NaN of Invalid Date') {
-			return `from 01 to ${lastTransactionEntries}`;
-		} else if (lastTransactionOutcome !== 'NaN of Invalid Date') {
-			return `from 01 to ${lastTransactionOutcome}`;
-		} else {
-			return 'No transactions';
-		}
-	}
-
-	async function loadTransaction() {
-		let entriesSum = 0;
-		let outcomeSum = 0;
-		let totalValue = 0;
-
-		const transactions: DataListProps[] = await firebaseFunctions.getCurrentDatasFromAsyncStorage();	
-
-		const transactionsFormatted: DataListProps[] = transactions.map((item: DataListProps) => {
-
-			item.type === 'positive' ? entriesSum += Number(item.amount) : outcomeSum += Number(item.amount);
-			
-			const amount = Number(item.amount).toLocaleString('pt-BR', {
-				style: 'currency',
-				currency: 'BRL'
-			});
-
-			const date = Intl.DateTimeFormat('pt-BR',{
-				day: '2-digit',
-				month: '2-digit',
-				year: '2-digit'
-			}).format(new Date(item.date));
-
-			return {
-				id: item.id,
-				name: item.name,
-				amount,
-				type: item.type,
-				category: item.category,
-				date
-			}
-		});
-
-		totalValue = entriesSum - outcomeSum;
-
-		setTransactions(transactionsFormatted);
-
-		const lastTransactionEntries = getLastTransactionDate(transactions, 'positive');
-		const lastTransactionOutcome = getLastTransactionDate(transactions, 'negative');
-		const totalInterval = lastTotalTransationDate(lastTransactionEntries, lastTransactionOutcome);
-
-		setHighlightData({
-			entries: {
-				amount: entriesSum.toLocaleString('pt-BR', {
-					style: 'currency',
-					currency: 'BRL'
-				}),
-				lastTransaction: lastTransactionEntries === 'NaN of Invalid Date' ? 'No transactions' : `Last income was ${lastTransactionEntries}`
-			},
-			outcome: {
-				amount: outcomeSum.toLocaleString('pt-BR', {
-					style: 'currency',
-					currency: 'BRL'
-				}),
-				lastTransaction: lastTransactionOutcome === 'NaN of Invalid Date' ? 'No transactions' : `Last outcome was ${lastTransactionOutcome}`
-			},
-			total: {
-				amount: totalValue.toLocaleString('pt-BR', {
-					style: 'currency',
-					currency: 'BRL'
-				}),
-				lastTransaction: totalInterval
-			}
-		});
+		setHighlightData(data.higlightData);
 
 		setIsLoading(false);
+
 	}
 
-	useEffect(() => {		
+	useEffect(() => {	
 		loadTransaction();
-	}, []);
-
-	useFocusEffect(useCallback(() => {
-		loadTransaction();
-	}, []))
+	}, [transactions]);
 
 	return (
 		<Animated.View style={{ flex: 1, ...drawerAnimationStyle}}>			

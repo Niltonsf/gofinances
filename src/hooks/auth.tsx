@@ -15,7 +15,8 @@ interface FirebaseFunctionsProps {
 	getAllDatasFromAsyncStorage(): Promise<any>;
 	insertDataIntoAsyncStorage(newData: NewTransactionProps): Promise<void>;
 	getSettingsFromAsyncStorage(): Promise<UserSettingsProps>;
-	firstTimeLogin(): Promise<void>;
+	firstTimeLogin(): Promise<any>;
+	loadTransaction(): Promise<any>;
 }
 
 interface AuthDataProps {
@@ -33,13 +34,18 @@ function AuthProvider({ children }: AuthProviderProps) {
 	
 	useEffect(() => {
 		async function handleUserSettings() {
-			const userSettings = await firebaseFunctions.getSettingsFromAsyncStorage();
+			// GETTING DATA IF USERS FIRST TIME
+			async function firstTime() {
+					return await firebaseFunctions.firstTimeLogin();            
+			}
+			const data = await firstTime();
+			
 			setUserSettings({
-				name: userSettings.name,
-				photo: userSettings.photo,
+					name: data.name,
+					photo: data.photo,
 			});
 		}
-
+	
 		handleUserSettings();
 	}, []);
 
@@ -48,7 +54,7 @@ function AuthProvider({ children }: AuthProviderProps) {
 			value={{
 				uid,
 				userSettings,
-				firebaseFunctions			
+				firebaseFunctions
 			}}
 		>
 			{ children }
