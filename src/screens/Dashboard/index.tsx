@@ -13,8 +13,7 @@ import {
 } from './styles';
 import { HighLightCard } from '../../components/HighLightCard';
 import { TransactionCard, TransactionCardProps } from '../../components/TransactionCard';
-import { useFocusEffect, useIsFocused } from '@react-navigation/native';
-import { useAuth } from '../../hooks/auth';
+import { useIsFocused } from '@react-navigation/native';
 import { ActivityIndicator } from 'react-native';
 import { useTheme } from 'styled-components'
 import LottieView from 'lottie-react-native';
@@ -40,7 +39,6 @@ interface HighlightDataProps {
 
 export function Dashboard({ drawerAnimationStyle}: any) {
 	const uid = auth().currentUser?.uid;
-	console.log(uid);
 	const firebaseFunctions: any = new FirebaseFunctions(uid);
 
 	const navigation: any = useNavigation();
@@ -52,7 +50,7 @@ export function Dashboard({ drawerAnimationStyle}: any) {
 	const theme = useTheme();
 
 	async function loadTransaction(): Promise<any> {		
-		await firebaseFunctions.firstTimeLogin();
+		await firebaseFunctions.fetchUserTransations();
 		
 		const data = await firebaseFunctions.loadTransaction();
 

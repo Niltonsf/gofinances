@@ -1,24 +1,11 @@
 import React, { createContext, useContext, ReactNode, useEffect, useState } from 'react';
 import auth from '@react-native-firebase/auth';
 import FirebaseFunctions from '../functions/firebase_functions';
-import { NewTransactionProps } from '../functions/firebase_functions';
-import { UserSettingsProps } from '../functions/firebase_functions';
+import { UserSettingsProps, FirebaseFunctionsProps } from '../functions/firebase_functions';
 
 interface AuthProviderProps {
 	children: ReactNode;
 }
-
-interface FirebaseFunctionsProps {	
-	handleAddNewTransaction(data: NewTransactionProps[]): Promise<void>;
-	handleGetAllDatasFromUser(): Promise<void>;
-	getCurrentDatasFromAsyncStorage(): Promise<any>;
-	getAllDatasFromAsyncStorage(): Promise<any>;
-	insertDataIntoAsyncStorage(newData: NewTransactionProps): Promise<void>;
-	getSettingsFromAsyncStorage(): Promise<UserSettingsProps>;
-	firstTimeLogin(): Promise<any>;
-	loadTransaction(): Promise<any>;
-}
-
 interface AuthDataProps {
 	uid: string | undefined;
 	userSettings: UserSettingsProps;
@@ -30,12 +17,11 @@ const AuthContext = createContext({} as AuthDataProps);
 function AuthProvider({ children }: AuthProviderProps) {
 	const [ userSettings, setUserSettings ] = useState({} as UserSettingsProps);
 	const uid = auth().currentUser?.uid;
-	const firebaseFunctions: FirebaseFunctionsProps = new FirebaseFunctions(uid);
+	const firebaseFunctions = new FirebaseFunctions(uid);
 	
 	async function handleUserSettings() {
 		// GETTING DATA IF USERS FIRST TIME
-		const data = await firebaseFunctions.firstTimeLogin();   
-		console.log(data);         
+		const data = await firebaseFunctions.fetchUserProfile();     
 		
 		setUserSettings({
 				name: data.name,

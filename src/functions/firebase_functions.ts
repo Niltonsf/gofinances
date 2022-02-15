@@ -16,6 +16,19 @@ export interface UserSettingsProps {
 	photo: string;
 }
 
+export interface FirebaseFunctionsProps {	
+	handleAddNewTransaction(data: NewTransactionProps[]): Promise<void>;
+	getCurrentDatasFromAsyncStorage(): Promise<any>;
+	getAllDatasFromAsyncStorage(): Promise<any>;
+	insertDataIntoAsyncStorage(newData: NewTransactionProps): Promise<void>;
+	getSettingsFromAsyncStorage(): Promise<UserSettingsProps>;
+	loadTransaction(): Promise<any>;
+	fetchUserProfileFirestore(): Promise<any>;
+	fetchUserTransationsFirestore(): Promise<any>;
+	fetchUserProfile(): Promise<any>;
+	fetchUserTransations(): Promise<any>;
+}
+
 class FirebaseFunctions {	
 	uid: string | undefined;	
 	asyncStorageFinances = '@finances:firestore';
@@ -26,7 +39,32 @@ class FirebaseFunctions {
 		this.uid = uid;
 	}
 
-	public async handleAddNewTransaction(newTransaction: NewTransactionProps[]): Promise<void> {
+	private lastTotalTransationDate(lastTransactionEntries: string, lastTransactionOutcome: string): string {
+		if (lastTransactionEntries !== 'NaN of Invalid Date') {
+			return `from 01 to ${lastTransactionEntries}`;
+		} else if (lastTransactionOutcome !== 'NaN of Invalid Date') {
+			return `from 01 to ${lastTransactionOutcome}`;
+		} else {
+			return 'No transactions';
+		}
+	}
+
+	private getLastTransactionDate(collection: DataListProps[], type: 'positive' | 'negative') {
+		const lastTransaction = new Date(
+			Math.max.apply(Math, collection
+			.filter(transaction => transaction.type === type
+			)
+			.map(transaction => new Date(transaction.date).getTime()))
+		);
+
+		const day = lastTransaction.getDate();
+		const month = lastTransaction.toLocaleString(`en-US`, {
+			month: 'long'
+		});
+		return `${day} of ${month}`
+	}
+
+	async handleAddNewTransaction(newTransaction: NewTransactionProps[]): Promise<void> {
 		if(this.uid === undefined) return;
 
 		try {
@@ -39,7 +77,27 @@ class FirebaseFunctions {
 		}
 	}
 
-	public async handleGetAllDatasFromUser(): Promise<void> {
+	// fetchUserProfileFirestore and fetchUserTransationsFirestore
+	async fetchUserProfileFirestore():  Promise<any> {
+		if(this.uid === undefined) return;
+
+		const settingsSnapshot: any = await firestore()
+			.collection(this.uid)
+			.doc('settings')						
+			.get()
+			.then(documentSnapshot => {								
+				return documentSnapshot.data() === undefined ? { name: 'Joe Doe' } : documentSnapshot.data();
+			});
+
+		try {
+			const jsonData = JSON.stringify(settingsSnapshot);
+			await AsyncStorage.setItem(this.asyncStorageSettings, jsonData);
+		} catch (err) {
+			throw new Error(err as any);
+		}
+	}
+
+	async fetchUserTransationsFirestore(): Promise<any> {
 		if(this.uid === undefined) return;
 
 		// GETTING TRANSACTIONS
@@ -68,21 +126,6 @@ class FirebaseFunctions {
 		} catch (err) {
 			throw new Error(err as any);
 		}
-		
-		const settingsSnapshot: any = await firestore()
-			.collection(this.uid)
-			.doc('settings')						
-			.get()
-			.then(documentSnapshot => {								
-				return documentSnapshot.data() === undefined ? { name: 'Joe Doe' } : documentSnapshot.data();
-			});
-
-		try {
-			const jsonData = JSON.stringify(settingsSnapshot);
-			await AsyncStorage.setItem(this.asyncStorageSettings, jsonData);
-		} catch (err) {
-			throw new Error(err as any);
-		}
 	}
 
 	async getCurrentDatasFromAsyncStorage(): Promise<any> {
@@ -102,7 +145,6 @@ class FirebaseFunctions {
 		}
 	}
 
-	// fetchUserProfileFirestore and fetchUserTransationsFirestore
 	async getAllDatasFromAsyncStorage(): Promise<any> {
 		try {
 			const jsonValue = await AsyncStorage.getItem(this.asyncStorageFinances);
@@ -144,8 +186,7 @@ class FirebaseFunctions {
 		}
 	}
 
-	// fetchUserProfile and fetchUserTransations
-	async firstTimeLogin(): Promise<any> {
+	async fetchUserProfile(): Promise<any> {
 		const firstTime = await AsyncStorage.getItem(this.asyncStorageFirstTime);
 		
 		if (firstTime !== this.uid) await this.removeItemValue();
@@ -153,7 +194,32 @@ class FirebaseFunctions {
 
 		// SETTINGS DATA
 		try {
-			await this.handleGetAllDatasFromUser();
+			await this.fetchUserProfileFirestore();
+		} catch (err: any) {
+			throw new Error(err);
+		}
+
+		// SETTING UP FIRST TIME IN ASYNC STORAGE
+		try {
+			await AsyncStorage.setItem(this.asyncStorageFirstTime, this.uid!);
+		} catch (err) {
+			throw new Error(err as any);
+		}
+
+		const data = await this.getSettingsFromAsyncStorage();
+
+		return data;
+	}
+
+	async fetchUserTransations(): Promise<any> {
+		const firstTime = await AsyncStorage.getItem(this.asyncStorageFirstTime);
+		
+		if (firstTime !== this.uid) await this.removeItemValue();
+		if (firstTime && firstTime === this.uid) return await this.getSettingsFromAsyncStorage();
+
+		// SETTINGS DATA
+		try {
+			await this.fetchUserTransationsFirestore();
 		} catch (err: any) {
 			throw new Error(err);
 		}
@@ -180,32 +246,6 @@ class FirebaseFunctions {
     catch(exception) {
         return false;
     }
-	}
-
-	// LOAD DATA
-	private lastTotalTransationDate(lastTransactionEntries: string, lastTransactionOutcome: string): string {
-		if (lastTransactionEntries !== 'NaN of Invalid Date') {
-			return `from 01 to ${lastTransactionEntries}`;
-		} else if (lastTransactionOutcome !== 'NaN of Invalid Date') {
-			return `from 01 to ${lastTransactionOutcome}`;
-		} else {
-			return 'No transactions';
-		}
-	}
-
-	private getLastTransactionDate(collection: DataListProps[], type: 'positive' | 'negative') {
-		const lastTransaction = new Date(
-			Math.max.apply(Math, collection
-			.filter(transaction => transaction.type === type
-			)
-			.map(transaction => new Date(transaction.date).getTime()))
-		);
-
-		const day = lastTransaction.getDate();
-		const month = lastTransaction.toLocaleString(`en-US`, {
-			month: 'long'
-		});
-		return `${day} of ${month}`
 	}
 
 	async loadTransaction(): Promise<any> {
