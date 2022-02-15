@@ -21,7 +21,7 @@ import LottieView from 'lottie-react-native';
 import NoTransactionLottie from '../../assets/no_transactions.json';
 import Animated from 'react-native-reanimated';
 import { useNavigation } from '@react-navigation/native';
-import AppLoading from 'expo-app-loading';
+
 export interface DataListProps extends TransactionCardProps {
 	id: string;
 }
@@ -41,6 +41,7 @@ export function Dashboard({ drawerAnimationStyle}: any) {
 	const { firebaseFunctions } = useAuth();
 
 	const [isLoading, setIsLoading] = useState(true);
+	const [delayComplete, setDelayComplete] = useState(false);
 	const [transactions, setTransactions] = useState<DataListProps[]>([]);
 	const [higlightData, setHighlightData] = useState<HighlightDataProps>({} as HighlightDataProps);
 	const theme = useTheme();
@@ -53,10 +54,9 @@ export function Dashboard({ drawerAnimationStyle}: any) {
 		setHighlightData(data.higlightData);
 
 		setIsLoading(false);
-
 	}
 
-	useEffect(() => {	
+	useEffect(() => {
 		loadTransaction();
 	}, [transactions]);
 
