@@ -10,7 +10,6 @@ import { Summary } from '../../screens/Summary';
 import { connect } from 'react-redux';
 import { setSelectedTab } from '../../stores/tab/tabActions';
 import { Settings } from '../../screens/Settings';
-import { StatusBar } from 'expo-status-bar';
 
 const Drawer = createDrawerNavigator();
 

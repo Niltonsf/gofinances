@@ -38,8 +38,8 @@ const schema = Yup.object().shape({
 });
 
 export function SignIn({ navigation }: any){
-	const [isLoading, setIsLoading] = useState(false);
 
+	const [isLoading, setIsLoading] = useState(false);
 	const { control, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(schema)});
 
 	async function handleLogin(form: LoginProps) {
@@ -59,6 +59,17 @@ export function SignIn({ navigation }: any){
 		}
 		catch (err) {
 			console.log(err);
+		}
+	}
+
+	async function handleForgotPassword(email: string | undefined) {
+		if (!email) return Alert.alert('No email on field');
+
+		try {	
+			await auth().sendPasswordResetEmail(email);
+			Alert.alert('Email sent')
+		} catch (err) {
+			Alert.alert('Error sending email');
 		}
 	}
 	
@@ -122,14 +133,12 @@ export function SignIn({ navigation }: any){
 								<ButtonTitle>SIGN UP</ButtonTitle>
 							</Button>
 
+							<Spacing height={15}/>
+
+							<ForgotPassContainer onPress={() => handleForgotPassword(control._fields.email._f.value)}>
+								<ForgotText>Forgot password?</ForgotText>
+							</ForgotPassContainer>
 						</Form>
-
-						<Spacing height={15}/>
-
-						<ForgotPassContainer>
-							<ForgotText>Forgot password?</ForgotText>
-						</ForgotPassContainer>
-
 					</Footer>
 			</Container>
 		</DismissKeyboard>

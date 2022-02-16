@@ -48,7 +48,7 @@ export const Spacing = styled.View<SpacingProps>`
 	margin-bottom: ${({ height }) => RFValue(height)}px;
 `;
 
-export const ForgotPassContainer = styled.View`
+export const ForgotPassContainer = styled.TouchableOpacity`
 	width: 100%;
 	align-items: center;
 	justify-content: center;

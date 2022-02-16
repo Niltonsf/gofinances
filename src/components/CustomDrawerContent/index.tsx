@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { 
 	Container,
 	CloseIcon,
@@ -31,6 +31,10 @@ export function CustomDrawerContent({ navigation, selectedTab, setSelectedTab }:
 		}
 	}
 
+	useEffect(() => {
+		console.log(userSettings);
+	}, [])
+
 	return (
 		<DrawerContentScrollView
 			scrollEnabled={false}
@@ -49,7 +53,7 @@ export function CustomDrawerContent({ navigation, selectedTab, setSelectedTab }:
 				</IconContainer>
 				
 				<ProfileContainer>
-					<Image style={{ width: 60, height: 60, borderRadius: 10}} source={{ uri: "https://github.com/niltonsf.png"}} />
+					<Image style={{ width: 60, height: 60, borderRadius: 10}} source={require('../../assets/defaultProfile.png')} />
 					<UsernameContainer>
 						<Gretting>Hello,</Gretting>
 						<Username>{userSettings.name}</Username>

@@ -27,6 +27,7 @@ export interface FirebaseFunctionsProps {
 	fetchUserTransationsFirestore(): Promise<any>;
 	fetchUserProfile(): Promise<any>;
 	fetchUserTransations(): Promise<any>;
+	removeItemValue(): Promise<any>;
 }
 
 class FirebaseFunctions {	
