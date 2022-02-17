@@ -9,6 +9,8 @@ export function Settings({ drawerAnimationStyle}: any){
 	const PASSWORD: string = "Nil316165";
 	const AUTH_CODE: string = String(uuid.v4());
 
+	const api = new NubankApi();
+
 	// async function Nubank(): Promise<any> {
 	// 	try {
 	// 		await NubankApi.auth.authenticateWithQrCode(CPF, PASSWORD, AUTH_CODE);
