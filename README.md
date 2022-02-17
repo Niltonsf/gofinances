@@ -14,3 +14,4 @@
 https://www.figma.com/file/QfTZacFr65ZUKBPDcNwrRi/Finances?node-id=2%3A2
 
 ## App in Action
+![ezgif com-gif-maker](https://user-images.githubusercontent.com/49406326/154384241-f78fa61e-fd73-4caa-895f-c3532bbc55ed.gif)
