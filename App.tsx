@@ -22,6 +22,7 @@ import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import rootReducer from './src/stores/rootReducer';
+import { Onboarding } from './src/screens/Onboarding';
 
 const store = createStore(
 	rootReducer,
@@ -50,10 +51,11 @@ export default function App() {
 			<Provider store={store}>
 				<NavigationContainer>
 					{ user ? 
-						<AuthProvider>
-							<StatusBar style="light"/>
-							<DrawerRoutes /> 
-						</AuthProvider>
+						// <AuthProvider>
+						// 	<StatusBar style="light"/>
+						// 	<DrawerRoutes /> 
+						// </AuthProvider>
+						<Onboarding />
 						:
 						<>
 							<StatusBar style="dark"/>
