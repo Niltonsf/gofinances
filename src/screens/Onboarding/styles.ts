@@ -10,3 +10,9 @@ export const Container = styled.View`
 	margin-top: ${getStatusBarHeight()}px;
 	margin-bottom: ${getBottomSpace()}px;
 `;
+
+export const FlatListContainer = styled.View`
+	flex: 1;
+	justify-content: center;
+	align-items: center;
+`;

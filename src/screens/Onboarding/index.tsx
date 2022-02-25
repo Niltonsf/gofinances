@@ -1,13 +1,15 @@
 import React, { useState, useRef } from 'react';
 import { 
-	Container
+	Container,
+	FlatListContainer
 } from './styles';
 import {
 	FlatList,
 	Animated
 } from 'react-native'
 import OnboardingData from '../../utils/onboarding';
-import { OnboardingItem } from '../../components/OnboardingItem'
+import { OnboardingItem } from '../../components/OnboardingItem';
+import { Paginator } from '../../components/Paginator';
 
 export function Onboarding(){
 
@@ -23,22 +25,26 @@ export function Onboarding(){
 
 	return (
 		<Container>
-			<FlatList 
-				data={OnboardingData} 
-				renderItem={({ item }) => <OnboardingItem image={item.image} title={item.title} description={item.description}/>}
-				horizontal
-				showsHorizontalScrollIndicator={false}
-				pagingEnabled={true}
-				bounces={false}
-				keyExtractor={(item) => String(item.id)}
-				onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } }}], {
-					useNativeDriver: false
-				})}
-				scrollEventThrottle={32}
-				onViewableItemsChanged={viewableItemsChanged}
-				viewabilityConfig={viewConfig}
-				ref={onboardingDataRef}
-			/>
+			<FlatListContainer>
+				<FlatList 
+					data={OnboardingData} 
+					renderItem={({ item }) => <OnboardingItem image={item.image} title={item.title} description={item.description}/>}
+					horizontal
+					showsHorizontalScrollIndicator={false}
+					pagingEnabled={true}
+					bounces={false}
+					keyExtractor={(item) => String(item.id)}
+					onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } }}], {
+						useNativeDriver: false
+					})}
+					scrollEventThrottle={32}
+					onViewableItemsChanged={viewableItemsChanged}
+					viewabilityConfig={viewConfig}
+					ref={onboardingDataRef}
+				/>
+			</FlatListContainer>
+
+			<Paginator data={OnboardingData} scrollX={scrollX} currentIndex={currentIndex}/>
 		</Container>
 	);
 }
