@@ -2,6 +2,7 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { SignIn } from '../screens/SignIn';
 import { SignUp } from '../screens/SignUp';
+import { Onboarding } from '../screens/Onboarding';
 
 export function AuthRoutes() {
 
@@ -10,7 +11,7 @@ export function AuthRoutes() {
 	return (
 		<Navigator
 			screenOptions={{
-				headerShown: false,			
+				headerShown: false,							
 			}}
 		>
 			<Screen 

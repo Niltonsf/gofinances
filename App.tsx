@@ -23,6 +23,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import rootReducer from './src/stores/rootReducer';
 import { Onboarding } from './src/screens/Onboarding';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const store = createStore(
 	rootReducer,
@@ -35,10 +36,28 @@ export default function App() {
 		Poppins_500Medium,
 		Poppins_700Bold
 	});
+	const showOnboarding = '@finances:onboarding';
 	const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null);
+	const [onboarding, setOnboarding] = useState(true);
+
+	async function handleCheckOnboarding() {
+		const getOnboarding = await AsyncStorage.getItem(showOnboarding);
+
+		if (getOnboarding) { 
+			setOnboarding(false);
+			return;
+		};
+	}
+
+	async function handleOnboarding() {
+		setOnboarding(false);
+
+		await AsyncStorage.setItem(showOnboarding, 'true');
+	}
 
 	useEffect(() => {
 		const subscriber = auth().onAuthStateChanged(setUser);
+		handleCheckOnboarding().then(() => {});
 		return subscriber;
 	}, []);
 
@@ -48,22 +67,26 @@ export default function App() {
 
   return (
 		<ThemeProvider theme={theme}>					
-			<Provider store={store}>
-				<NavigationContainer>
-					{ user ? 
-						// <AuthProvider>
-						// 	<StatusBar style="light"/>
-						// 	<DrawerRoutes /> 
-						// </AuthProvider>
-						<Onboarding />
-						:
-						<>
-							<StatusBar style="dark"/>
-							<AuthRoutes />
-						</>
-					}				
-				</NavigationContainer>	
-			</Provider>
+			{ 
+				onboarding ? 
+				<Onboarding handleOnboarding={handleOnboarding}/>
+				:
+				<Provider store={store}>
+					<NavigationContainer>
+						{ user ? 
+							<AuthProvider>
+								<StatusBar style="light"/>
+								<DrawerRoutes /> 
+							</AuthProvider>					
+							:
+							<>
+								<StatusBar style="dark"/>
+								<AuthRoutes />
+							</>
+						}				
+					</NavigationContainer>	
+				</Provider>
+			}
 		</ThemeProvider>
   );
 }

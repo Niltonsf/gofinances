@@ -1,5 +1,6 @@
 import { RFValue } from 'react-native-responsive-fontsize';
 import styled from 'styled-components/native';
+import { getStatusBarHeight } from 'react-native-iphone-x-helper';
 
 export const Container = styled.View`
 	flex: 1;
@@ -28,4 +29,29 @@ export const Description = styled.Text`
 	margin-top: ${RFValue(15)}px;
 	font-family: ${({ theme }) => theme.fonts.regular}
 	font-size: ${RFValue(15)}px;
+`;
+
+export const DoneButtonContainer = styled.View`
+	width: 100%;
+	align-items: flex-end;
+	padding-horizontal: ${RFValue(40)}px;
+	justify-content: flex-end;
+`;
+
+export const DoneButton = styled.TouchableOpacity`
+	width: ${RFValue(60)}px;
+	height: ${RFValue(30)}px;
+	border-radius: 10px;
+	background-color: ${({ theme }) => theme.colors.blue};
+	margin-top: ${getStatusBarHeight()}px;
+	align-items: center;
+	justify-content: center;
+`;
+
+export const DoneButtonTitle = styled.Text`
+	font-family: ${({ theme }) => theme.fonts.regular}
+	color: ${({ theme }) => theme.colors.shapeColor};
+	font-size: ${RFValue(15)}px;
+	text-align: center;
+	padding: ${RFValue(5)}px;
 `;
