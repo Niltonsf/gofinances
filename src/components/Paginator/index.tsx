@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Container,
   CurrentSelectedPageIndicator,
@@ -7,6 +7,7 @@ import {
 } from './styles';
 import { useWindowDimensions } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
+import Animated, { useSharedValue, interpolate, useAnimatedStyle, Extrapolate, withTiming } from 'react-native-reanimated';
 interface PaginatorProps {
   data: any;
   scrollX: any;
@@ -18,8 +19,31 @@ const activeSize = RFValue(20);
 
 export function Paginator({ data, scrollX, currentIndex }: PaginatorProps) {
   const { width } = useWindowDimensions();
+	const [textOpacityAlreadyLoaded, setTextOpacityAlreadyLoaded] = useState<Boolean>(false);
 
-	useEffect(() => { console.log('here')}, [currentIndex]);
+	const opacityV: any = useSharedValue(0);
+
+	useEffect(() => { 
+		if (currentIndex === 2) {
+			opacityV.value = withTiming(1, {
+				duration: 1500
+			});
+			setTextOpacityAlreadyLoaded(true);
+		} else if (currentIndex !== 2) {
+			opacityV.value = 0;
+		}
+	}, [currentIndex]);
+
+	const opacityTxt: any = useAnimatedStyle(() => {		
+		return {
+			opacity: interpolate(
+				opacityV.value,
+				[0, 1],
+				[0, 1],
+				Extrapolate.CLAMP
+			)
+		};
+	})
 
   return (
     <Container>
@@ -84,10 +108,9 @@ export function Paginator({ data, scrollX, currentIndex }: PaginatorProps) {
               <ButtonContainer
 								disabled={currentIndex !== 2 ? true : false}
 								onPress={() => {
-									
 								}}
                 style={{ opacity: buttonOpacity }}>
-                <ButtonTitle style={currentIndex === 2 ? { opacity: 1 } : { opacity: 0 }}>LET'S BUILD THE FUTURE</ButtonTitle>
+                <ButtonTitle style={[opacityTxt]}>LET'S BUILD THE FUTURE</ButtonTitle>
               </ButtonContainer>
             )}
           </CurrentSelectedPageIndicator>

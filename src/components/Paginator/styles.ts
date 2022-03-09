@@ -1,6 +1,7 @@
 import { RFValue } from "react-native-responsive-fontsize";
 import styled from "styled-components/native";
 import { Animated } from 'react-native';
+import { default as ReanimatedAnimated } from 'react-native-reanimated';
 
 export const Container = styled.View`
 	flex-direction: row;
@@ -30,7 +31,7 @@ export const ButtonContainer = styled.TouchableOpacity`
 	background-color: ${({ theme }) => theme.colors.blue };
 `;
 
-export const ButtonTitle = styled.Text`
+export const ButtonTitle = styled(ReanimatedAnimated.Text)`
 	font-family: ${({ theme }) => theme.fonts.medium};
 	font-size: ${RFValue(14)}px;
 	color: ${({ theme }) => theme.colors.shapeColor};
