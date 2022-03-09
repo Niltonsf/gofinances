@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Container,
   CurrentSelectedPageIndicator,
@@ -13,11 +13,13 @@ interface PaginatorProps {
 	currentIndex: any;
 }
 
-const inactiveSize = RFValue(10)
-const activeSize = RFValue(20)
+const inactiveSize = RFValue(10);
+const activeSize = RFValue(20);
 
 export function Paginator({ data, scrollX, currentIndex }: PaginatorProps) {
   const { width } = useWindowDimensions();
+
+	useEffect(() => { console.log('here')}, [currentIndex]);
 
   return (
     <Container>

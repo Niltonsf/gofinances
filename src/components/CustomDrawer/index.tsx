@@ -19,7 +19,32 @@ function CustomDrawer({ selectedTab, setSelectedTab }: any){
 		setSelectedTab('Dashboard');
 	}
 
+	//const progress = useSharedValue(0);
 	const [progress, setProgress] = useState(new Animated.Value(0));
+
+	/*
+		const scale: any = useAnimatedStyle(() => {
+			return {
+				transform: [{ 
+					scale: interpolate(
+						inputRange: [0, 1],
+						outputRange: [1, 0.8],
+						extrapolate.CLAMP
+					)
+				}]
+			};
+		})
+
+		const scale: any = useAnimatedStyle(() => {
+			return {
+				borderRadius: interpolate(
+					inputRange: [0, 1],
+					outputRange: [0, 26],
+					extrapolate.CLAMP
+				)
+			};
+		})
+	*/
 
 	const scale: any = Animated.interpolate(progress, {
 		inputRange: [0, 1],
