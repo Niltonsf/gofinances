@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import {
   Container,
   CurrentSelectedPageIndicator,
@@ -19,7 +19,6 @@ const activeSize = RFValue(20);
 
 export function Paginator({ data, scrollX, currentIndex }: PaginatorProps) {
   const { width } = useWindowDimensions();
-	const [textOpacityAlreadyLoaded, setTextOpacityAlreadyLoaded] = useState<Boolean>(false);
 
 	const opacityV: any = useSharedValue(0);
 
@@ -28,7 +27,6 @@ export function Paginator({ data, scrollX, currentIndex }: PaginatorProps) {
 			opacityV.value = withTiming(1, {
 				duration: 1500
 			});
-			setTextOpacityAlreadyLoaded(true);
 		} else if (currentIndex !== 2) {
 			opacityV.value = 0;
 		}
