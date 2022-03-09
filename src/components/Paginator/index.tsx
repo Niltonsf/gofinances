@@ -38,7 +38,7 @@ export function Paginator({ data, scrollX, currentIndex }: PaginatorProps) {
           });        
         let height = inactiveSize;
         let buttonOpacity = 0;
-				let opacityText = 0;
+				
         let dotWidth = scrollX.interpolate({
           inputRange,
           outputRange: widthRange,
@@ -66,12 +66,7 @@ export function Paginator({ data, scrollX, currentIndex }: PaginatorProps) {
             inputRange: [inactiveSize, width],
             outputRange: [0, 1],
             extrapolate: 'clamp',
-          });					
-					opacityText = dotWidth.interpolate({
-            inputRange: [inactiveSize, width],
-            outputRange: [0, 1],
-            extrapolate: 'clamp',
-          });										
+          });														
         }
         const marginHorizontal = dotWidth.interpolate({
           inputRange: [0, inactiveSize],
@@ -86,7 +81,9 @@ export function Paginator({ data, scrollX, currentIndex }: PaginatorProps) {
             {isLastElement && (
               <ButtonContainer
 								disabled={currentIndex !== 2 ? true : false}
-								onPress={() => console.log('button')}
+								onPress={() => {
+									
+								}}
                 style={{ opacity: buttonOpacity }}>
                 <ButtonTitle style={currentIndex === 2 ? { opacity: 1 } : { opacity: 0 }}>LET'S BUILD THE FUTURE</ButtonTitle>
               </ButtonContainer>
