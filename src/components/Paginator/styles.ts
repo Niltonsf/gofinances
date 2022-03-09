@@ -20,3 +20,18 @@ export const CurrentSelectedPageIndicator = styled(Animated.View).attrs({
 	background-color: ${({ theme }) => theme.colors.blue };
 	margin-horizontal: ${RFValue(8)}px;
 `;
+
+export const ButtonContainer = styled.TouchableOpacity`
+	width: 100%;
+	height: 100%;
+	align-items: center;
+	border-radius: 10px;
+	justify-content: center;
+	background-color: ${({ theme }) => theme.colors.blue };
+`;
+
+export const ButtonTitle = styled.Text`
+	font-family: ${({ theme }) => theme.fonts.medium};
+	font-size: ${RFValue(14)}px;
+	color: ${({ theme }) => theme.colors.shapeColor};
+`;

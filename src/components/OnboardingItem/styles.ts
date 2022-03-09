@@ -5,6 +5,7 @@ import { getStatusBarHeight } from 'react-native-iphone-x-helper';
 export const Container = styled.View`
 	flex: 1;
 	align-items: center;
+	position: relative;
 `;
 
 export const Image = styled.Image`
@@ -32,13 +33,17 @@ export const Description = styled.Text`
 `;
 
 export const DoneButtonContainer = styled.View`
-	width: 100%;
+	top: 100px;
+	position: absolute;
 	align-items: flex-end;
 	padding-horizontal: ${RFValue(40)}px;
 	justify-content: flex-end;
 `;
 
 export const DoneButton = styled.TouchableOpacity`
+	position: absolute;
+	top: 10px;
+	right: 0px;
 	width: ${RFValue(60)}px;
 	height: ${RFValue(30)}px;
 	border-radius: 10px;

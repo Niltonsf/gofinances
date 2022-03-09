@@ -16,22 +16,13 @@ interface OnboardingItemProps{
 	image: ImageSourcePropType;
 	title: string;
 	description: string;
-	currentIndex: any;
-	handleOnboarding: () => void;
 }
 
-export function OnboardingItem({ image, title, description, currentIndex, handleOnboarding }: OnboardingItemProps){ 
+export function OnboardingItem({ image, title, description }: OnboardingItemProps){ 
 	const { width } = useWindowDimensions();	
 
 	return (
-		<Container style={{ width: width}}>
-			{ currentIndex.toString() === '2' ? 
-				<DoneButtonContainer>
-					<DoneButton onPress={handleOnboarding}>
-						<DoneButtonTitle>DONE</DoneButtonTitle>
-					</DoneButton> 
-				</DoneButtonContainer>
-			: null }
+		<Container style={{ width: width}}>		
 			<Image source={image} style={{
 				width: width,
 				resizeMode: 'contain'
