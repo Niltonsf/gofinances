@@ -39,7 +39,7 @@ function CustomDrawer({ selectedTab, setSelectedTab }: any){
 			borderRadius: interpolate(
 				progress.value,
 				[0, 1],
-				[0, 26],
+				[0, 20],
 				Extrapolate.CLAMP
 			)
 		};
@@ -48,7 +48,7 @@ function CustomDrawer({ selectedTab, setSelectedTab }: any){
 	const animatedStyle = [[ borderRadius, scale ]];
 
 	useEffect(() => {
-		setDefaultOnlyOnce();		
+		setDefaultOnlyOnce();
 	}, [])
 
 	return (
@@ -64,12 +64,16 @@ function CustomDrawer({ selectedTab, setSelectedTab }: any){
 				}}
 				initialRouteName="Dashboard"
 				drawerContent={props => {
-					setTimeout(() => {									
-						progress.value = 0;							
-						/*
-						 	PREVIOUS VERSION:
-							setProgress(props.progress as any); 
-						*/
+					setTimeout(() => {
+						if (props['navigation'].getState().history!.length > 1){
+							progress.value = withTiming(1, {
+								duration: 400,								
+							});
+						} else {
+							progress.value = withTiming(0, {
+								duration: 300,								
+							});
+						}												
 					}, 0);					
 
 					return <CustomDrawerContent

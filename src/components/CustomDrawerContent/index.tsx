@@ -31,10 +31,6 @@ export function CustomDrawerContent({ navigation, selectedTab, setSelectedTab }:
 		}
 	}
 
-	useEffect(() => {
-		console.log(userSettings);
-	}, [])
-
 	return (
 		<DrawerContentScrollView
 			scrollEnabled={false}
