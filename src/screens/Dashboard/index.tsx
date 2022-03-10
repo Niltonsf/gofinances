@@ -37,7 +37,7 @@ interface HighlightDataProps {
 	total: PropsHighLight;
 }
 
-export function Dashboard({ drawerAnimationStyle}: any) {
+export function Dashboard({ drawerAnimationStyle }: any) {
 	const uid = auth().currentUser?.uid;
 	const firebaseFunctions: any = new FirebaseFunctions(uid);
 
@@ -69,7 +69,7 @@ export function Dashboard({ drawerAnimationStyle}: any) {
 
 
 	return (
-		<Animated.View style={{ flex: 1, ...drawerAnimationStyle}}>			
+		<Animated.View style={[{ flex: 1, overflow: 'hidden' }, [drawerAnimationStyle]]}>			
 			<Container>
 				{
 					isLoading ? 

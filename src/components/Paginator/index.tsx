@@ -7,7 +7,7 @@ import {
 } from './styles';
 import { useWindowDimensions } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
-import Animated, { useSharedValue, interpolate, useAnimatedStyle, Extrapolate, withTiming } from 'react-native-reanimated';
+import { useSharedValue, interpolate, useAnimatedStyle, Extrapolate, withTiming } from 'react-native-reanimated';
 interface PaginatorProps {
   data: any;
   scrollX: any;
