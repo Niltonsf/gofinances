@@ -38,7 +38,7 @@ export default function App() {
 	});
 	const showOnboarding = '@finances:onboarding';
 	const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null);
-	const [onboarding, setOnboarding] = useState(true);
+	const [onboarding, setOnboarding] = useState(false);
 
 	async function handleCheckOnboarding() {
 		const getOnboarding = await AsyncStorage.getItem(showOnboarding);

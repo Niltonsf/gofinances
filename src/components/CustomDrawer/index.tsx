@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Container } from './styles';
 import { createDrawerNavigator } from '@react-navigation/drawer'; 
 import { Register } from '../../screens/Register';
 import { CustomDrawerContent } from '../CustomDrawerContent';
-import Animated from 'react-native-reanimated';
 import { Dashboard } from '../../screens/Dashboard';
 import { Summary } from '../../screens/Summary';
 //REDUX
 import { connect } from 'react-redux';
 import { setSelectedTab } from '../../stores/tab/tabActions';
 import { Settings } from '../../screens/Settings';
+import { useSharedValue, interpolate, useAnimatedStyle, Extrapolate, withTiming } from 'react-native-reanimated';
 
 const Drawer = createDrawerNavigator();
 
@@ -19,47 +19,36 @@ function CustomDrawer({ selectedTab, setSelectedTab }: any){
 		setSelectedTab('Dashboard');
 	}
 
-	//const progress = useSharedValue(0);
-	const [progress, setProgress] = useState(new Animated.Value(0));
-
-	/*
-		const scale: any = useAnimatedStyle(() => {
-			return {
-				transform: [{ 
-					scale: interpolate(
-						inputRange: [0, 1],
-						outputRange: [1, 0.8],
-						extrapolate.CLAMP
-					)
-				}]
-			};
-		})
-
-		const scale: any = useAnimatedStyle(() => {
-			return {
-				borderRadius: interpolate(
-					inputRange: [0, 1],
-					outputRange: [0, 26],
-					extrapolate.CLAMP
+	let progress = useSharedValue(0);
+	
+	const scale: any = useAnimatedStyle(() => {
+		return {
+			transform: [{ 
+				scale: interpolate(
+					progress.value,
+					[0, 1],
+					[1, 0.8],
+					Extrapolate.CLAMP
 				)
-			};
-		})
-	*/
+			}]
+		};
+	})
 
-	const scale: any = Animated.interpolate(progress, {
-		inputRange: [0, 1],
-		outputRange: [1, 0.8]
-	});
+	const borderRadius: any = useAnimatedStyle(() => {
+		return {
+			borderRadius: interpolate(
+				progress.value,
+				[0, 1],
+				[0, 26],
+				Extrapolate.CLAMP
+			)
+		};
+	})
 
-	const borderRadius: any = Animated.interpolate(progress, {
-		inputRange: [0, 1],
-		outputRange: [0, 26]
-	});
-
-	const animatedStyle = { borderRadius, transform: [{ scale }], overflow: 'hidden' };
+	const animatedStyle = [[ borderRadius, scale ]];
 
 	useEffect(() => {
-		setDefaultOnlyOnce();
+		setDefaultOnlyOnce();		
 	}, [])
 
 	return (
@@ -75,8 +64,12 @@ function CustomDrawer({ selectedTab, setSelectedTab }: any){
 				}}
 				initialRouteName="Dashboard"
 				drawerContent={props => {
-					setTimeout(() => {						
-						setProgress(props.progress as any);
+					setTimeout(() => {									
+						progress.value = 0;							
+						/*
+						 	PREVIOUS VERSION:
+							setProgress(props.progress as any); 
+						*/
 					}, 0);					
 
 					return <CustomDrawerContent
@@ -87,7 +80,7 @@ function CustomDrawer({ selectedTab, setSelectedTab }: any){
 				}}
 			>
 				<Drawer.Screen name="Dashboard">
-					{props => <Dashboard drawerAnimationStyle={animatedStyle}/>}
+					{props => <Dashboard drawerAnimationStyle={animatedStyle} />}
 				</Drawer.Screen>
 
 				<Drawer.Screen name="Register">
