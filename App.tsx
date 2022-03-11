@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useLayoutEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { ThemeProvider } from 'styled-components';
 import {
@@ -38,9 +38,9 @@ export default function App() {
 	});
 	const showOnboarding = '@finances:onboarding';
 	const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null);
-	const [onboarding, setOnboarding] = useState(false);
+	const [onboarding, setOnboarding] = useState(true);
 
-	async function handleCheckOnboarding() {
+	async function handleCheckOnboarding() {		
 		const getOnboarding = await AsyncStorage.getItem(showOnboarding);
 
 		if (getOnboarding) { 
@@ -52,12 +52,15 @@ export default function App() {
 	async function handleOnboarding() {
 		setOnboarding(false);
 
-		await AsyncStorage.setItem(showOnboarding, 'true');
+		await AsyncStorage.setItem(showOnboarding, 'false');
 	}
+
+	useLayoutEffect(() => {		
+		handleCheckOnboarding().then(() => {});
+	}, []);
 
 	useEffect(() => {
 		const subscriber = auth().onAuthStateChanged(setUser);
-		handleCheckOnboarding().then(() => {});
 		return subscriber;
 	}, []);
 

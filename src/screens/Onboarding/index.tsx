@@ -54,7 +54,7 @@ export function Onboarding({ handleOnboarding }: OnboardingProps){
 				/>
 			</FlatListContainer>
 
-			<Paginator data={OnboardingData} scrollX={scrollX} currentIndex={currentIndex}/>
+			<Paginator data={OnboardingData} scrollX={scrollX} currentIndex={currentIndex} handleOnboarding={handleOnboarding}/>
 		</Container>
 	);
 }

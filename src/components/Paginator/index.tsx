@@ -12,12 +12,13 @@ interface PaginatorProps {
   data: any;
   scrollX: any;
 	currentIndex: any;
+	handleOnboarding: any;
 }
 
 const inactiveSize = RFValue(10);
 const activeSize = RFValue(20);
 
-export function Paginator({ data, scrollX, currentIndex }: PaginatorProps) {
+export function Paginator({ data, scrollX, currentIndex, handleOnboarding }: PaginatorProps) {
   const { width } = useWindowDimensions();
 
 	const opacityV: any = useSharedValue(0);
@@ -106,6 +107,7 @@ export function Paginator({ data, scrollX, currentIndex }: PaginatorProps) {
               <ButtonContainer
 								disabled={currentIndex !== 2 ? true : false}
 								onPress={() => {
+									handleOnboarding();
 								}}
                 style={{ opacity: buttonOpacity }}>
                 <ButtonTitle style={[opacityTxt]}>LET'S BUILD THE FUTURE</ButtonTitle>
