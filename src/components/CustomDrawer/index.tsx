@@ -65,14 +65,12 @@ function CustomDrawer({ selectedTab, setSelectedTab }: any){
 				initialRouteName="Dashboard"
 				drawerContent={props => {
 					setTimeout(() => {
-						if (props['navigation'].getState().history!.length > 1){
-							progress.value = withTiming(1, {
-								duration: 400,								
-							});
+						const drawer = props['navigation'].getState()["history"].filter((item: any) => item.type === "drawer");						
+						console.log(drawer);
+						if (drawer.length >= 1){
+							progress.value = withTiming(1, { duration: 350 });
 						} else {
-							progress.value = withTiming(0, {
-								duration: 300,								
-							});
+							progress.value = withTiming(0, { duration: 350 });
 						}												
 					}, 0);					
 

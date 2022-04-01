@@ -113,7 +113,7 @@ export function Summary({ drawerAnimationStyle }: any){
 	}, [selectedDate]))
 
 	return (
-		<Animated.View style={{ flex: 1, ...drawerAnimationStyle}}>
+		<Animated.View style={[{ flex: 1, overflow: 'hidden' }, [drawerAnimationStyle]]}>
 			<Container>
 				<Header>
 					<DrawerContainer onPress={() => navigation.openDrawer()}>

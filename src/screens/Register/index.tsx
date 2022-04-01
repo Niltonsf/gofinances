@@ -95,7 +95,7 @@ export function Register({ drawerAnimationStyle, setSelectedTab }: any) {
 	}
 
 	return (
-		<Animated.View style={{ flex: 1, ...drawerAnimationStyle}}>
+		<Animated.View style={[{ flex: 1, overflow: 'hidden' }, [drawerAnimationStyle]]}>
 			<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 				<Container>
 					<Header>
