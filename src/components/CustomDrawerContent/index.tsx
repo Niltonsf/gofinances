@@ -10,7 +10,8 @@ import {
 	DrawerItems,
 	LogOutButton,
 	LogOutIcon,
-	LogOutText
+	LogOutText,
+	ClickableImage
 } from './styles';
 import { DrawerContentScrollView } from '@react-navigation/drawer'; 
 import { Image, TouchableOpacity } from 'react-native';
@@ -31,6 +32,10 @@ export function CustomDrawerContent({ navigation, selectedTab, setSelectedTab }:
 		}
 	}
 
+	function handleProfileImage() {
+		console.log('data')
+	}
+
 	return (
 		<DrawerContentScrollView
 			scrollEnabled={false}
@@ -49,7 +54,9 @@ export function CustomDrawerContent({ navigation, selectedTab, setSelectedTab }:
 				</IconContainer>
 				
 				<ProfileContainer>
-					<Image style={{ width: 60, height: 60, borderRadius: 10}} source={require('../../assets/defaultProfile.png')} />
+					<ClickableImage onPress={handleProfileImage}>
+						<Image style={{ width: 50, height: 50, borderRadius: 50}} source={require('../../assets/defaultProfile.png')} />
+					</ClickableImage>
 					<UsernameContainer>
 						<Gretting>Hello,</Gretting>
 						<Username>{userSettings.name}</Username>

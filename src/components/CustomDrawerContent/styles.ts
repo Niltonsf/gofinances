@@ -25,6 +25,10 @@ export const ProfileContainer = styled.View`
 	align-items: center;
 `;
 
+export const ClickableImage = styled.TouchableOpacity`
+
+`;
+
 export const UsernameContainer = styled.View`
 	margin-left: ${RFValue(8)}px;
 `;
