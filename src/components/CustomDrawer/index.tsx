@@ -8,7 +8,6 @@ import { Summary } from '../../screens/Summary';
 //REDUX
 import { connect } from 'react-redux';
 import { setSelectedTab } from '../../stores/tab/tabActions';
-import { Settings } from '../../screens/Settings';
 import { useSharedValue, interpolate, useAnimatedStyle, Extrapolate, withTiming } from 'react-native-reanimated';
 
 const Drawer = createDrawerNavigator();
@@ -90,10 +89,6 @@ function CustomDrawer({ selectedTab, setSelectedTab }: any){
 
 				<Drawer.Screen name="Summary">
 					{props => <Summary drawerAnimationStyle={animatedStyle}/>}
-				</Drawer.Screen>
-
-				<Drawer.Screen name="Settings">
-					{props => <Settings drawerAnimationStyle={animatedStyle}/>}
 				</Drawer.Screen>
 			</Drawer.Navigator>
 		</Container>

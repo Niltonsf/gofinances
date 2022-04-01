@@ -74,13 +74,7 @@ export function CustomDrawerContent({ navigation, selectedTab, setSelectedTab }:
 								setSelectedTab("Summary");
 								navigation.navigate("Summary");
 							}} 
-						/>
-						<CustomDrawerItem label="Settings" icon="settings" isSelected={selectedTab === 'Settings'}
-							onPress={() => {
-								setSelectedTab("Settings");
-								navigation.navigate("Settings");
-							}} 
-						/>
+						/>					
 				</DrawerItems>
 
 				<LogOutButton onPress={logOut}>
