@@ -39,6 +39,10 @@
 	</dict>
 	<key>NSMainNibFile</key>
 	<string>LaunchScreen</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Using Library</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Using camera</string>
 	<key>UILaunchStoryboardName</key>
 	<string>SplashScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -53,10 +57,6 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>PhotoLibraryUsageDescription</string>
-	<key>NSCameraUsageDescription</key>
-	<string>PhotoLibraryUsageDescription</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 </dict>

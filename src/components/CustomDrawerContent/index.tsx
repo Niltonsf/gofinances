@@ -18,6 +18,7 @@ import { Image, TouchableOpacity } from 'react-native';
 import { CustomDrawerItem } from '../CustomDrawerItem';
 import auth from '@react-native-firebase/auth';
 import { useAuth } from '../../hooks/auth';
+import * as ImagePicker from 'react-native-image-picker';
 
 
 export function CustomDrawerContent({ navigation, selectedTab, setSelectedTab }: any){
@@ -32,9 +33,21 @@ export function CustomDrawerContent({ navigation, selectedTab, setSelectedTab }:
 		}
 	}
 
-	function handleProfileImage() {
-		console.log('data')
-	}
+	async function handleProfileImage() {
+    const result = await ImagePicker.launchImageLibrary({mediaType: 'photo'});
+
+    // if (status == 'granted') {
+    //   const result = await ImagePicker.launchImageLibraryAsync({
+    //     mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    //     aspect: [4, 4],
+    //     quality: 1,
+    //   });
+
+    //   if (!result.cancelled) {
+    //     //setImage(result.uri);
+    //   }
+    // }
+  };
 
 	return (
 		<DrawerContentScrollView
