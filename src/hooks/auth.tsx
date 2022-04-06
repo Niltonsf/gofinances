@@ -17,20 +17,20 @@ const AuthContext = createContext({} as AuthDataProps);
 function AuthProvider({ children }: AuthProviderProps) {
 	const [ userSettings, setUserSettings ] = useState({} as UserSettingsProps);
 	const uid = auth().currentUser?.uid;
-	const firebaseFunctions = new FirebaseFunctions(uid);
+	const firebaseFunctions: FirebaseFunctionsProps = new FirebaseFunctions(uid);
 	
 	async function handleUserSettings() {
 		// GETTING DATA IF USERS FIRST TIME
-		const data = await firebaseFunctions.fetchUserProfile();     
-		
-		setUserSettings({
-				name: data.name,
-				photo: data.photo,
-		});
+		return await firebaseFunctions.fetchUserProfile();     
 	}
 
 	useEffect(() => {
-		handleUserSettings().then(() => {});
+		handleUserSettings().then(data => {
+			setUserSettings({
+				name: data.name,
+				photo: data.photo,
+			});
+		});
 	}, []);
 
 	return (

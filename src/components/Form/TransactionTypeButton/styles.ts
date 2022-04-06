@@ -1,5 +1,4 @@
-import styled, {css} from 'styled-components/native';
-import { TouchableOpacity } from 'react-native';
+import styled, { css } from 'styled-components/native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { Feather } from '@expo/vector-icons';
 import { RectButton } from 'react-native-gesture-handler';
@@ -46,12 +45,12 @@ export const Button = styled(RectButton)`
 	padding: 16px;
 `;
 
-export const Icon = styled(Feather)<IconProps>`
+export const Icon = styled(Feather) <IconProps>`
 	font-size: ${RFValue(24)}px;
 	margin-right: 12px;
-	color:${({ theme, type }) => 
+	color:${({ theme, type }) =>
 		type === 'up' ?
-		theme.colors.green :
-		theme.colors.red
+			theme.colors.green :
+			theme.colors.red
 	};
 `;

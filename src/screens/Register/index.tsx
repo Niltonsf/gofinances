@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, TouchableWithoutFeedback, Keyboard, Alert } from 'react-native';
+import { Modal, TouchableWithoutFeedback, Keyboard, Alert, FlatList } from 'react-native';
 import { Button } from '../../components/Form/Button';
 import { CategorySelectButton } from '../../components/Form/CategorySelectButton';
 import { TransactionTypeButton } from '../../components/Form/TransactionTypeButton';
@@ -23,6 +23,8 @@ import uuid from 'react-native-uuid';
 import { useNavigation } from '@react-navigation/native'
 import Animated from 'react-native-reanimated';
 import { useAuth } from '../../hooks/auth';
+import { Split } from '../../components/Split';
+import splitData from '../../utils/spilt';
 
 interface FormProps {
 	name: string;
@@ -118,6 +120,15 @@ export function Register({ drawerAnimationStyle, setSelectedTab }: any) {
 									isActive={transactionType === 'negative'}
 								/>
 							</TransactionTypes>
+							<Spacing height={10}/>						
+							<FlatList
+								horizontal={true}
+								data={splitData}				
+								scrollEnabled				
+								renderItem={({ item }) => <Split split_text={item.split}></Split>}
+								keyExtractor={({ id }) => id}
+								style={{ width: '100%', paddingBottom: 5}}			
+							/>
 							<Spacing height={10}/>
 							<CategorySelectButton title={category.name} onPress={handleOpenSelectCategory}/>
 						</Fields>

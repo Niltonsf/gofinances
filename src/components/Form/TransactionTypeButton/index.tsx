@@ -14,6 +14,7 @@ const icons = {
 interface TransactionTypeButtonProps {
 	title: string;
 	type: 'up' | 'down';
+	onPress: () => void;
 	isActive: boolean;
 }
 

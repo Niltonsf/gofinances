@@ -1,6 +1,8 @@
 import firestore from '@react-native-firebase/firestore';
+import storage from '@react-native-firebase/storage';
 import { DataListProps } from '../screens/Dashboard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Alert } from 'react-native';
 
 export interface NewTransactionProps {
 	id: string;
@@ -16,7 +18,7 @@ export interface UserSettingsProps {
 	photo: string;
 }
 
-export interface FirebaseFunctionsProps {	
+export interface FirebaseFunctionsProps {
 	handleAddNewTransaction(data: NewTransactionProps[]): Promise<void>;
 	getCurrentDatasFromAsyncStorage(): Promise<any>;
 	getAllDatasFromAsyncStorage(): Promise<any>;
@@ -28,10 +30,12 @@ export interface FirebaseFunctionsProps {
 	fetchUserProfile(): Promise<any>;
 	fetchUserTransations(): Promise<any>;
 	removeItemValue(): Promise<any>;
+	handleProfileUpload(image: string): Promise<any>;
+	getProfileImage(): Promise<any>;
 }
 
-class FirebaseFunctions {	
-	uid: string | undefined;	
+class FirebaseFunctions {
+	uid: string | undefined;
 	asyncStorageFinances = '@finances:firestore';
 	asyncStorageSettings = '@finances:settings';
 	asyncStorageFirstTime = '@finances:firstTime';
@@ -53,9 +57,9 @@ class FirebaseFunctions {
 	private getLastTransactionDate(collection: DataListProps[], type: 'positive' | 'negative') {
 		const lastTransaction = new Date(
 			Math.max.apply(Math, collection
-			.filter(transaction => transaction.type === type
-			)
-			.map(transaction => new Date(transaction.date).getTime()))
+				.filter(transaction => transaction.type === type
+				)
+				.map(transaction => new Date(transaction.date).getTime()))
 		);
 
 		const day = lastTransaction.getDate();
@@ -66,47 +70,55 @@ class FirebaseFunctions {
 	}
 
 	async handleAddNewTransaction(newTransaction: NewTransactionProps[]): Promise<void> {
-		if(this.uid === undefined) return;
+		if (this.uid === undefined) return;
 
 		try {
 			await firestore()
-			.collection(this.uid)
-			.doc('transactions')						
-			.set({ finances: newTransaction });					
+				.collection(this.uid)
+				.doc('transactions')
+				.set({ finances: newTransaction });
 		} catch (err) {
 			throw new Error(err as any);
 		}
 	}
 
 	// fetchUserProfileFirestore and fetchUserTransationsFirestore
-	async fetchUserProfileFirestore():  Promise<any> {
-		if(this.uid === undefined) return;
+	async fetchUserProfileFirestore(): Promise<any> {
+		if (this.uid === undefined) return;
 
 		const settingsSnapshot: any = await firestore()
 			.collection(this.uid)
-			.doc('settings')						
+			.doc('settings')
 			.get()
-			.then(documentSnapshot => {								
+			.then(documentSnapshot => {
 				return documentSnapshot.data() === undefined ? { name: 'Joe Doe' } : documentSnapshot.data();
 			});
 
+		const profileImage = await this.getProfileImage();
+
+		const settings = {
+			...settingsSnapshot,
+			photo: profileImage
+		}
+
 		try {
-			const jsonData = JSON.stringify(settingsSnapshot);
+			const jsonData = JSON.stringify(settings);
 			await AsyncStorage.setItem(this.asyncStorageSettings, jsonData);
+			return settings;
 		} catch (err) {
 			throw new Error(err as any);
 		}
 	}
 
 	async fetchUserTransationsFirestore(): Promise<any> {
-		if(this.uid === undefined) return;
+		if (this.uid === undefined) return;
 
 		// GETTING TRANSACTIONS
 		const documentSnapshot: any = await firestore()
 			.collection(this.uid)
-			.doc('transactions')						
+			.doc('transactions')
 			.get()
-			.then(documentSnapshot => {								
+			.then(documentSnapshot => {
 				return documentSnapshot.data() === undefined ? { finances: [] } : documentSnapshot.data();
 			});
 
@@ -134,14 +146,14 @@ class FirebaseFunctions {
 			const jsonValue = await AsyncStorage.getItem(this.asyncStorageFinances);
 			const currentDate = new Date();
 			const currentMonth = currentDate.getMonth();
-			const currentYear = currentDate.getFullYear();			
+			const currentYear = currentDate.getFullYear();
 			const data = jsonValue !== null ? JSON.parse(jsonValue) : [];
-			const filteredValues = data === [] ? [] : data.filter((value: any) => {				
+			const filteredValues = data === [] ? [] : data.filter((value: any) => {
 				const newDate = typeof value.date === 'string' ? new Date(value.date) : value.date;
-				return newDate.getMonth() === currentMonth && newDate.getFullYear() === currentYear ?  newDate : null;
+				return newDate.getMonth() === currentMonth && newDate.getFullYear() === currentYear ? newDate : null;
 			});
 			return filteredValues;
-		} catch(e) {
+		} catch (e) {
 			throw new Error(e as any);
 		}
 	}
@@ -150,7 +162,7 @@ class FirebaseFunctions {
 		try {
 			const jsonValue = await AsyncStorage.getItem(this.asyncStorageFinances);
 			return jsonValue !== null ? JSON.parse(jsonValue) : [];
-		} catch(e) {
+		} catch (e) {
 			throw new Error(e as any);
 		}
 	}
@@ -164,7 +176,7 @@ class FirebaseFunctions {
 		const newFinances = [...oldData];
 
 		// INSERTING NEW DATA
-		newFinances.unshift(newData);	
+		newFinances.unshift(newData);
 
 		// INSERTING DATA INTO DATABASE
 		await this.handleAddNewTransaction(newFinances);
@@ -189,7 +201,7 @@ class FirebaseFunctions {
 
 	async fetchUserProfile(): Promise<any> {
 		const firstTime = await AsyncStorage.getItem(this.asyncStorageFirstTime);
-		
+
 		if (firstTime !== this.uid) await this.removeItemValue();
 		if (firstTime && firstTime === this.uid) return await this.getSettingsFromAsyncStorage();
 
@@ -214,7 +226,7 @@ class FirebaseFunctions {
 
 	async fetchUserTransations(): Promise<any> {
 		const firstTime = await AsyncStorage.getItem(this.asyncStorageFirstTime);
-		
+
 		if (firstTime !== this.uid) await this.removeItemValue();
 		if (firstTime && firstTime === this.uid) return await this.getSettingsFromAsyncStorage();
 
@@ -238,15 +250,15 @@ class FirebaseFunctions {
 	}
 
 	async removeItemValue() {
-    try {
-        await AsyncStorage.removeItem(this.asyncStorageFinances);
-				await AsyncStorage.removeItem(this.asyncStorageSettings);
-				await AsyncStorage.removeItem(this.asyncStorageFirstTime);
-        return true;
-    }
-    catch(exception) {
-        return false;
-    }
+		try {
+			await AsyncStorage.removeItem(this.asyncStorageFinances);
+			await AsyncStorage.removeItem(this.asyncStorageSettings);
+			await AsyncStorage.removeItem(this.asyncStorageFirstTime);
+			return true;
+		}
+		catch (exception) {
+			return false;
+		}
 	}
 
 	async loadTransaction(): Promise<any> {
@@ -259,13 +271,13 @@ class FirebaseFunctions {
 		const transactionsFormatted: DataListProps[] = transactions.map((item: DataListProps) => {
 
 			item.type === 'positive' ? entriesSum += Number(item.amount) : outcomeSum += Number(item.amount);
-			
+
 			const amount = Number(item.amount).toLocaleString('pt-BR', {
 				style: 'currency',
 				currency: 'BRL'
 			});
 
-			const date = Intl.DateTimeFormat('pt-BR',{
+			const date = Intl.DateTimeFormat('pt-BR', {
 				day: '2-digit',
 				month: '2-digit',
 				year: '2-digit'
@@ -314,6 +326,35 @@ class FirebaseFunctions {
 		return {
 			transactionsFormatted,
 			higlightData
+		}
+	}
+
+	async handleProfileUpload(image: string): Promise<any> {
+		const filename = this.uid;
+		const reference = storage().ref(`/images/${filename}.png`);
+
+		const uploadTask = reference.putFile(image);
+
+		await uploadTask.on('state_changed', taskSnapshot => {
+			const percent = ((taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) * 100).toFixed(0);
+			console.log(percent)
+		});
+
+		uploadTask.then(() => {
+			Alert.alert("Sucess");
+		});
+	}
+
+	async getProfileImage(): Promise<any> {
+		const filename = this.uid;
+
+		const ref = await storage().ref(`/images/${filename}.png`);
+
+		try {
+			const url = await ref.getDownloadURL();
+			return url;
+		} catch (error) {
+			console.log('Error: ', error);
 		}
 	}
 }
